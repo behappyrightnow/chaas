@@ -22,7 +22,18 @@ angular.module('fitApp',[])
             "|company number|employee number|first name|last name|hire date|",
             "|4808147|9942|Bill|Mitchell|19-Dec-1966|",
             "|4808147|1429|Bob|Mastin|10-Oct-1975|",
-            "|5123122|||||"
+            "|5123122|||||",
+            "",
+            "Now, let's see a script table.",
+            "|script|login dialog driver|Bob|xyzzy|",
+            "|login with username|Bob|and password|xyzzy|",
+            "|check|login message|Bob logged in.|",
+            "|reject|login with username|Bob|and password|bad password|",
+            "|check|login message|Bob not logged in.|",
+            "|check not|login message|Bob logged in.|",
+            "|ensure|login with username|Bob|and password|xyzzy|",
+            "|note|this is a comment|",
+            "|show|number of login attempts|"
         ])
 
         $scope.runFitTestsOnPage = function() {
@@ -44,7 +55,14 @@ angular.module('fitApp',[])
             if (firstRow.length === 1) {
                 return new DecisionProcessor(fitUtils);
             } else {
-                return new QueryProcessor(fitUtils);
+                var firstCell:string = firstRow[0].cellEntry.toUpperCase();
+                if (firstCell.indexOf("QUERY") !== -1) {
+                    return new QueryProcessor(fitUtils);
+                } else if (firstCell.indexOf("SCRIPT") !== -1) {
+                    return new ScriptProcessor(fitUtils);
+                } else {
+                    throw "Could not understand which Processor needs to be instantiated!";
+                }
             }
         }
   });

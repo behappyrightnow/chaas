@@ -218,3 +218,9 @@ class QueryProcessor extends Processor {
         return surplus;
     }
 }
+
+class ScriptProcessor extends Processor {
+    process(tableEl:TableWikiElement) {
+
+    }
+}
