@@ -31,7 +31,12 @@
                            colspan="{{row.length<element.maxCols?element.maxCols:1}}">
                             {{cell.cellEntry}}
                             <span ng-if="cell.status === 'FAILED'">
-                                <br/>&nbsp;<p/><i>{{cell.msg}}</i>
+                                <br/>&nbsp;<p/>
+                                <span ng-if="cell.msg !== null"><i>{{cell.msg}}</i></span>
+                                <span ng-if="cell.msg === null">
+                                    Expected: <i>{{cell.expected}}</i><br/>
+                                    But got: <i>{{cell.actual}}</i>
+                                </span>
                             </span>
                         </td>
                     </tr>

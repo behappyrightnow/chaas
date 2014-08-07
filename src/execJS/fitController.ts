@@ -28,18 +28,31 @@ angular.module('fitApp',[])
                 }
             }
         }
+        function hasQuestionMark(methodString) {
+            return methodString.indexOf('?') !== -1;
+        }
+
+        function createInputMethod(methodString) {
+            return new Method(methodString, true);
+        }
+
+        function createOutputMethod(methodString) {
+            methodString = methodString.substr(0, methodString.length - 1);
+            method = new Method(methodString, false);
+            return method;
+        }
+
         function processMethods(tableEl, myObject, classToInit) {
             var headerRow = tableEl.rows[1];
-            var methods = new Array();
+            var methods = new Array<Method>();
             for (var j = 0; j < headerRow.length; j++) {
                 var cell = headerRow[j];
                 var methodString = cell.cellEntry;
-                var method;
-                if (methodString.indexOf('?') === -1) {
-                    method = new Method(methodString, true);
+                var method: Method;
+                if (!hasQuestionMark(methodString)) {
+                    method = createInputMethod(methodString);
                 } else {
-                    methodString = methodString.substr(0, methodString.length - 1);
-                    method = new Method(methodString, false);
+                    method = createOutputMethod(methodString);
                 }
                 methods.push(method);
                 if (myObject.prototype[method.methodName] === undefined) {
@@ -64,7 +77,7 @@ angular.module('fitApp',[])
                 }
 
                 for (var j = 0; j < row.length; j++) {
-                    var cell = row[j];
+                    var cell: CellWikiElement = row[j];
                     var method:Method = methods[j];
                     if (!method.isInput) {
                         var retVal = myObject.prototype[method.methodName]();
@@ -72,7 +85,9 @@ angular.module('fitApp',[])
                             cell.status = "PASSED";
                         } else {
                             cell.status = "FAILED";
-                            cell.msg = "Expected " + cell.cellEntry + " but got " + retVal;
+                            cell.msg = null;
+                            cell.expected = cell.cellEntry;
+                            cell.actual = retVal;
                         }
                     }
                 }
@@ -86,7 +101,7 @@ angular.module('fitApp',[])
 
         $scope.process = function(tableEl:TableWikiElement) {
             $scope.runComplete = false;
-            var firstRow = tableEl.rows[0];
+            var firstRow: Array<CellWikiElement> = tableEl.rows[0];
             var classToInit = fitUtils.camelCaseClass(firstRow[0].cellEntry);
             var myObject = window[classToInit];
             if (myObject === undefined) {

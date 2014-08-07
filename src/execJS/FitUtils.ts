@@ -71,7 +71,7 @@ class TableWikiElement implements WikiElement {
     rows: Array<Array<CellWikiElement>>;
     type: string;
     tableStart: boolean;
-    maxCols: integer;
+    maxCols: number;
     constructor() {
         this.type = "TABLE";
         this.rows = new Array();
@@ -80,7 +80,7 @@ class TableWikiElement implements WikiElement {
     }
     addRow(row: string) {
         var cells = this.parseCells(row);
-        var cellElements = new Array();
+        var cellElements = new Array<CellWikiElement>();
         _.each(cells, function(cell) {
             cellElements.push(new CellWikiElement(cell));
         })
@@ -101,9 +101,16 @@ class TableWikiElement implements WikiElement {
 
 class CellWikiElement {
     cellEntry: string;
+    status: string;
+    msg: string;
+    expected: string;
+    actual: string;
     constructor(cellEntry:string) {
         this.cellEntry = cellEntry;
         this.status = "IDLE";
+        this.msg = null;
+        this.expected = null;
+        this.actual = null;
     }
 }
 var fitUtils = new FitUtils();
