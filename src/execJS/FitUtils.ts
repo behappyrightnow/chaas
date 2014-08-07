@@ -72,6 +72,7 @@ class TableWikiElement implements WikiElement {
     type: string;
     tableStart: boolean;
     maxCols: number;
+
     constructor() {
         this.type = "TABLE";
         this.rows = new Array();
@@ -89,6 +90,11 @@ class TableWikiElement implements WikiElement {
             this.maxCols = cells.length;
         }
     }
+
+    firstRow(): Array<CellWikiElement> {
+        return this.rows[0];
+    }
+
 
     parseCells(row) {
         var tempLine:string = row.substr(1);

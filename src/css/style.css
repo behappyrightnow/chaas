@@ -1,7 +1,11 @@
 .redCell {
-    background-color: #ffaaaa;
+    background-color: #e8b3ae;
 }
 
 .greenCell {
-    background-color: #aaffaa;
+    background-color: #bbe7d3;
+}
+
+.yellowCell {
+    background-color: #f9ebad;
 }

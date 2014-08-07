@@ -7,9 +7,11 @@
     <script src="../../bower_components/angular/angular.js"></script>
     <script src="../../bower_components/underscore/underscore.js"></script>
     <script src="../execJS/FitUtils.js"></script>
+    <script src="../execJS/FitProcessors.js"></script>
     <script src="../execJS/fitController.js"></script>
     <!-- User imports begin here -->
     <script src="../userJS/ShouldIBuyMilk.js"></script>
+    <script src="../userJS/EmployeesHiredBefore.js"></script>
     <!-- User imports end here -->
 </head>
 <body ng-app="fitApp" ng-controller="fitController">
@@ -27,17 +29,23 @@
                     <tr ng-repeat="row in element.rows track by $index">
                         <td
                            ng-repeat="cell in row track by $index"
-                           ng-class="{greenCell: cell.status === 'PASSED', redCell: cell.status === 'FAILED'}"
-                           colspan="{{row.length<element.maxCols?element.maxCols:1}}">
+                           ng-class="{greenCell: cell.status === 'PASSED', redCell: cell.status === 'FAILED', yellowCell: cell.status === 'IGNORED'}"
+                           colspan="{{row.length<element.maxCols?($index===0?1:element.maxCols-1):1}}">
                             {{cell.cellEntry}}
-                            <span ng-if="cell.status === 'FAILED'">
+                            <span ng-if="cell.status === 'FAILED' || cell.status === 'IGNORED'">
                                 <br/>&nbsp;<p/>
                                 <span ng-if="cell.msg !== null"><i>{{cell.msg}}</i></span>
                                 <span ng-if="cell.msg === null">
-                                    Expected: <i>{{cell.expected}}</i><br/>
-                                    But got: <i>{{cell.actual}}</i>
+                                    <span ng-if="cell.expected !== null && cell.expected !==''">
+                                        Expected: <i>{{cell.expected}}</i><br/>
+                                        But got: <i>{{cell.actual}}</i>
+                                    </span>
+                                    <span ng-if="cell.expected === null || cell.expected === ''">
+                                        <i>{{cell.actual}}</i>
+                                    </span>
                                 </span>
                             </span>
+
                         </td>
                     </tr>
                 </table>

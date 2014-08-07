@@ -1,7 +1,7 @@
 /// <reference path="FitUtils.ts"/>
+/// <reference path="FitProcessors.ts"/>
 angular.module('fitApp',[])
   .controller('fitController', function ($scope) {
-        $scope.runComplete = false;
         $scope.pageContents = fitUtils.wikiData([
             "This will map to a class called ShouldIBuyMilk. Each row in the table is a test.",
             "",
@@ -16,7 +16,13 @@ angular.module('fitApp',[])
             "|0|yes|1|no|",
             "|10|yes|1|no|",
             "",
-            "This is an example of executable documentation!"
+            "This is an example of executable documentation!",
+            "Now let's try a Query table",
+            "|Query:employees hired before|10-Dec-1980|",
+            "|company number|employee number|first name|last name|hire date|",
+            "|4808147|9942|Bill|Mitchell|19-Dec-1966|",
+            "|4808147|1429|Bob|Mastin|10-Oct-1975|",
+            "|5123122|||||"
         ])
 
         $scope.runFitTestsOnPage = function() {
@@ -28,89 +34,17 @@ angular.module('fitApp',[])
                 }
             }
         }
-        function hasQuestionMark(methodString) {
-            return methodString.indexOf('?') !== -1;
-        }
-
-        function createInputMethod(methodString) {
-            return new Method(methodString, true);
-        }
-
-        function createOutputMethod(methodString) {
-            methodString = methodString.substr(0, methodString.length - 1);
-            method = new Method(methodString, false);
-            return method;
-        }
-
-        function processMethods(tableEl, myObject, classToInit) {
-            var headerRow = tableEl.rows[1];
-            var methods = new Array<Method>();
-            for (var j = 0; j < headerRow.length; j++) {
-                var cell = headerRow[j];
-                var methodString = cell.cellEntry;
-                var method: Method;
-                if (!hasQuestionMark(methodString)) {
-                    method = createInputMethod(methodString);
-                } else {
-                    method = createOutputMethod(methodString);
-                }
-                methods.push(method);
-                if (myObject.prototype[method.methodName] === undefined) {
-                    cell.status = "FAILED";
-                    cell.msg = "Method " + method.methodName + "() not found in class " + classToInit;
-                } else {
-                    cell.status = "PASSED";
-                }
-            }
-            return methods;
-        }
-
-        function processRows(tableEl, methods, myObject) {
-            for (var i = 2; i < tableEl.rows.length; i++) {
-                var row = tableEl.rows[i];
-                for (var j = 0; j < row.length; j++) {
-                    var cell:CellWikiElement = row[j];
-                    var method:Method = methods[j];
-                    if (method.isInput) {
-                        myObject.prototype[method.methodName](cell.cellEntry);
-                    }
-                }
-
-                for (var j = 0; j < row.length; j++) {
-                    var cell: CellWikiElement = row[j];
-                    var method:Method = methods[j];
-                    if (!method.isInput) {
-                        var retVal = myObject.prototype[method.methodName]();
-                        if (retVal === cell.cellEntry) {
-                            cell.status = "PASSED";
-                        } else {
-                            cell.status = "FAILED";
-                            cell.msg = null;
-                            cell.expected = cell.cellEntry;
-                            cell.actual = retVal;
-                        }
-                    }
-                }
-            }
-        }
-
-        function processTable(tableEl, myObject, classToInit) {
-            var methods = processMethods(tableEl, myObject, classToInit);
-            processRows(tableEl, methods, myObject);
-        }
 
         $scope.process = function(tableEl:TableWikiElement) {
-            $scope.runComplete = false;
-            var firstRow: Array<CellWikiElement> = tableEl.rows[0];
-            var classToInit = fitUtils.camelCaseClass(firstRow[0].cellEntry);
-            var myObject = window[classToInit];
-            if (myObject === undefined) {
-                //var msg =
-                firstRow[0].status = "FAILED";
-                firstRow[0].msg = "Class '" + classToInit + "' not found. Please include src file '" + classToInit + ".js' and make sure it contains a class called " + classToInit + ".";
+            var processor:Processor = createProcessor(tableEl.firstRow());
+            processor.process(tableEl);
+        }
+
+        function createProcessor(firstRow:any):Processor {
+            if (firstRow.length === 1) {
+                return new DecisionProcessor(fitUtils);
             } else {
-                firstRow[0].status = "PASSED";
+                return new QueryProcessor(fitUtils);
             }
-            processTable(tableEl, myObject, classToInit);
         }
   });
