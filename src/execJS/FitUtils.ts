@@ -48,7 +48,7 @@ class FitUtils {
                 }
             }
         })
-        if (tableElement !== null) {
+        if (tableElement !== null && tableElement !== undefined) {
             answer.push(tableElement);
         }
         return answer;
