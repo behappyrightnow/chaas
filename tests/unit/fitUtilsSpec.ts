@@ -13,7 +13,11 @@ describe('FitUtils', function () {
         console.log(fitUtils.camelCase("cash in wallet"));
         expect(fitUtils.camelCase("cash in wallet")).toBe("cashInWallet");
     });
-    it("should make wiki data properly", function() {
+    describe("Wiki Element Creation", function() {
+        it("should turn strings into Default Elements", function() {
+            var listOfStrings = ["Hello", "World", "Again"];
+            WikiElement fitUtils.wikiData(listOfStrings);
+        })
 
     })
 });

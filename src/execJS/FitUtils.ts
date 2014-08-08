@@ -24,7 +24,7 @@ class FitUtils {
         return answer;
     }
 
-    wikiData(lines:Array<string>) {
+    wikiData(lines:Array<string>):Array<WikiElement> {
         var tableFound:boolean = false;
         var tableElement:TableWikiElement;
         var answer: Array<WikiElement> = new Array();
@@ -76,7 +76,6 @@ class TableWikiElement implements WikiElement {
     constructor() {
         this.type = "TABLE";
         this.rows = new Array();
-        this.status = new Array();
         this.maxCols = 1;
     }
     addRow(row: string) {
