@@ -4,14 +4,14 @@ class Processor {
     constructor(fitUtils: FitUtils) {
         this.fitUtils = fitUtils;
     }
-    initializeClass(classToInit, firstRow):any {
+    initializeClass(classToInit, classCell:CellWikiElement):any {
         var objectUnderTest = window[classToInit];
         if (objectUnderTest === undefined) {
             //var msg =
-            firstRow[0].status = "FAILED";
-            firstRow[0].msg = "Class '" + classToInit + "' not found. Please include src file '" + classToInit + ".js' and make sure it contains a class called " + classToInit + ".";
+            classCell.status = "FAILED";
+            classCell.msg = "Class '" + classToInit + "' not found. Please include src file '" + classToInit + ".js' and make sure it contains a class called " + classToInit + ".";
         } else {
-            firstRow[0].status = "PASSED";
+            classCell.status = "PASSED";
         }
         return objectUnderTest;
     }
@@ -23,7 +23,7 @@ class DecisionProcessor extends Processor {
     process(tableEl: TableWikiElement) {
         var firstRow: Array<CellWikiElement> = tableEl.firstRow();
         var classToInit = this.fitUtils.camelCaseClass(firstRow[0].cellEntry);
-        var objectUnderTest = this.initializeClass(classToInit, firstRow);
+        var objectUnderTest = this.initializeClass(classToInit, firstRow[0]);
         this.processTable(tableEl, objectUnderTest, classToInit);
     }
 
@@ -107,7 +107,7 @@ class QueryProcessor extends Processor {
         var colonIndex = classToInit.indexOf(":");
         classToInit = classToInit.substr(colonIndex+1);
         classToInit = this.fitUtils.camelCaseClass(classToInit);
-        var objectUnderTest = this.initializeClass(classToInit, firstRow);
+        var objectUnderTest = this.initializeClass(classToInit, firstRow[0]);
         this.checkQueryMethodIn(objectUnderTest, firstRow, classToInit);
         var results = this.callQueryMethod(objectUnderTest, firstRow);
         var fieldHeaders = this.processFieldHeadersIn(tableEl);
@@ -221,6 +221,56 @@ class QueryProcessor extends Processor {
 
 class ScriptProcessor extends Processor {
     process(tableEl:TableWikiElement) {
+        var firstRow: Array<CellWikiElement> = tableEl.firstRow();
+        var classToInit = firstRow[1].cellEntry;
+        classToInit = this.fitUtils.camelCaseClass(classToInit);
+        var objectUnderTest = this.initializeClass(classToInit, firstRow[1]);
+        var args:Array<string> = new Array<string>();
+        for (var i=2;i<firstRow.length;i++) {
+            args.push(firstRow[i]);
+        }
+        try {
+            objectUnderTest.apply(this, args);
+            console.log(firstRow, firstRow.length);
+            for (var j=2;j<firstRow.length;j++) {
+                firstRow[j].status = "PASSED";
+            }
+        }
+        catch(err) {
+            for (var i=2;i<firstRow.length;i++) {
+                firstRow[i].status = "FAILED";
+                firstRow[i].msg = "Exception thrown";
+            }
+        }
 
+        var reservedWords:Array<string> = ["reject", "check", "note", "check not", "ensure", "show"];
+        this.processRows(tableEl, reservedWords, objectUnderTest);
     }
+
+    processRows(tableEl: TableWikiElement, reservedWords:Array<string>, objectUnderTest:any) {
+        var row;
+        console.log(tableEl.rows.slice(1, tableEl.rows.length));
+        for (row in tableEl.rows.slice(1, tableEl.rows.length)) {
+            var methodCell = row[0];
+            var methodString = methodCell.cellEntry;
+            var method: Method = this.createInputMethod(methodString);
+            if (reservedWords.indexOf(methodString) !== -1){
+                methodCell.status = "PASSED";
+                methodCell.msg = "reserved word: " + methodString;
+            }
+            else if(objectUnderTest.prototype[method.methodName] !== undefined){
+                methodCell.status = "PASSED";
+                methodCell.msg = "found method: " + methodString;
+            }
+            else {
+                methodCell.status = "FAILED";
+                methodCell.msg = "couldn't find method: " + methodString;
+            }
+        }
+    }
+
+    createInputMethod(methodString): Method {
+        return new Method(methodString, true);
+    }
+
 }
