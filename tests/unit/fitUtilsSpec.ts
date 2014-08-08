@@ -16,7 +16,10 @@ describe('FitUtils', function () {
     describe("Wiki Element Creation", function() {
         it("should turn strings into Default Elements", function() {
             var listOfStrings = ["Hello", "World", "Again"];
-            WikiElement fitUtils.wikiData(listOfStrings);
+            var wikiElements:Array<WikiElement> = fitUtils.wikiData(listOfStrings);
+            _.each(wikiElements, function(wikiElement:WikiElement) {
+                expect(wikiElement.type).toBe("DEFAULT");
+            })
         })
 
     })
