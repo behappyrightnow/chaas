@@ -4,6 +4,8 @@
     "bower_components/angular/angular.js",
     "bower_components/underscore/underscore.js",
     "src/execJS/FitUtils.js",
-    "tests/unit/fitUtilsSpec.js"
+    "src/execJS/FitProcessors.js",
+    "tests/unit/fitUtilsSpec.js",
+    "tests/unit/fitProcessorsSpec.js"
   ]
 }
