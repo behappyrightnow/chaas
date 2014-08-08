@@ -18,18 +18,37 @@ describe('FitUtils', function () {
             var listOfStrings = ["Hello", "World", "Again"];
             var wikiElements:Array<WikiElement> = fitUtils.wikiData(listOfStrings);
             expect(wikiElements).not.toBe(undefined);
+            expect(wikiElements.length).toBe(3);
             for (var i=0;i<wikiElements.length;i++) {
                 expect(wikiElements[i]).not.toBe(undefined);
                 expect(wikiElements[i].type).toBe("DEFAULT");
             }
         });
         it("should turn piped strings into Table Elements", function () {
-            var listOfStrings = ["|Hello|World|", "|This Is |A Table|"];
+            var listOfStrings = ["|Hello|World|", "|This Is|A|Table|"];
             var wikiElements = fitUtils.wikiData(listOfStrings);
             expect(wikiElements).not.toBe(undefined);
+            expect(wikiElements.length).toBe(1);
+            for (var i = 0; i < wikiElements.length; i++) {
+                var element:TableWikiElement = wikiElements[i];
+                expect(element).not.toBe(undefined);
+                expect(element.type).toBe("TABLE");
+                expect(element.maxCols).toBe(3);
+                expect(element.rows.length).toBe(2);
+            }
+        });
+        it("should be able to handle multiple tables", function () {
+            var listOfStrings = [
+                "First Table",  "|Hello|World|",   "|This Is |A Table|","",
+                "Second Table", "|Yankee|Doodle|", "|Went To|Town|",    "",
+            ];
+            var wikiElements = fitUtils.wikiData(listOfStrings);
+            expect(wikiElements).not.toBe(undefined);
+            expect(wikiElements.length).toBe(6);
+            var expectedType = ["DEFAULT", "TABLE", "DEFAULT", "DEFAULT", "TABLE","DEFAULT"]
             for (var i = 0; i < wikiElements.length; i++) {
                 expect(wikiElements[i]).not.toBe(undefined);
-                expect(wikiElements[i].type).toBe("TABLE");
+                expect(wikiElements[i].type).toBe(expectedType[i]);
             }
         });
 
