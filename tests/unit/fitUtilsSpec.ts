@@ -52,5 +52,20 @@ describe('FitUtils', function () {
             }
         });
 
+    });
+    describe("Table Wiki Element", function() {
+        var tableWikiElement: TableWikiElement;
+        beforeEach(function() {
+            tableWikiElement = new TableWikiElement();
+        });
+        it("number of rows initially 0", function() {
+            expect(tableWikiElement.rows.length).toBe(0);
+        });
+        it("number of rows increments when row is added", function() {
+            tableWikiElement.addRow("|hello|world|");
+            expect(tableWikiElement.rows.length).toBe(1);
+            expect(tableWikiElement.rows[0][0].cellEntry).toBe("hello");
+            expect(tableWikiElement.rows[0][1].cellEntry).toBe("world");
+        });
     })
 });
