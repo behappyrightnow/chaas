@@ -5,7 +5,8 @@
     "angular": "1.2.16",
     "underscore":"1.6.0",
     "bootstrap": "~3.1.1",
-    "Font-Awesome": "*"
+    "Font-Awesome": "*",
+    "DefinitelyTyped": "*"
   },
   "appPath": "app"
 }

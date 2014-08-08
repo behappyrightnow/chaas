@@ -13,4 +13,7 @@ describe('FitUtils', function () {
         console.log(fitUtils.camelCase("cash in wallet"));
         expect(fitUtils.camelCase("cash in wallet")).toBe("cashInWallet");
     });
+    it("should make wiki data properly", function() {
+
+    })
 });
