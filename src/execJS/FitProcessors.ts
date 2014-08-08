@@ -32,7 +32,7 @@ class DecisionProcessor extends Processor {
         this.processRows(tableEl, methods, objectUnderTest);
     }
 
-    processMethods(tableEl, objectUnderTest, classToInit):Array<Methods> {
+    processMethods(tableEl, objectUnderTest, classToInit):Array<Method> {
         var headerRow = tableEl.rows[1];
         var methods = new Array<Method>();
         for (var j = 0; j < headerRow.length; j++) {
