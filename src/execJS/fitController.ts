@@ -27,6 +27,7 @@ angular.module('fitApp',[])
             "Now, let's see a script table.",
             "|script|login dialog driver|Bob|xyzzy|",
             "|login with username|Bob|and password|xyzzy|",
+            "|login with username and password;|Bob|xyzzy|",
             "|check|login message|Bob logged in.|",
             "|reject|login with username|Bob|and password|bad password|",
             "|check|login message|Bob not logged in.|",

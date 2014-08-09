@@ -1,4 +1,5 @@
 /// <reference path="FitUtils.ts"/>
+
 class Processor {
     fitUtils: FitUtils;
     constructor(fitUtils: FitUtils) {
@@ -227,7 +228,7 @@ class ScriptProcessor extends Processor {
         var objectUnderTest = this.initializeClass(classToInit, firstRow[1]);
         var args:Array<string> = new Array<string>();
         for (var i=2;i<firstRow.length;i++) {
-            args.push(firstRow[i]);
+            args.push(firstRow[i].cellEntry);
         }
         try {
             objectUnderTest.apply(this, args);
@@ -248,29 +249,117 @@ class ScriptProcessor extends Processor {
     }
 
     processRows(tableEl: TableWikiElement, reservedWords:Array<string>, objectUnderTest:any) {
-        var row;
-        console.log(tableEl.rows.slice(1, tableEl.rows.length));
-        for (row in tableEl.rows.slice(1, tableEl.rows.length)) {
-            var methodCell = row[0];
-            var methodString = methodCell.cellEntry;
-            var method: Method = this.createInputMethod(methodString);
-            if (reservedWords.indexOf(methodString) !== -1){
-                methodCell.status = "PASSED";
-                methodCell.msg = "reserved word: " + methodString;
-            }
-            else if(objectUnderTest.prototype[method.methodName] !== undefined){
-                methodCell.status = "PASSED";
-                methodCell.msg = "found method: " + methodString;
-            }
-            else {
-                methodCell.status = "FAILED";
-                methodCell.msg = "couldn't find method: " + methodString;
-            }
+        var rows = tableEl.rows;
+        for (var i = 1; i < rows.length; i++) {
+            var row = rows[i];
+            this.processRow(row, reservedWords, objectUnderTest);
         }
     }
 
-    createInputMethod(methodString): Method {
-        return new Method(methodString, true);
+    processRow(row, reservedWords, objectUnderTest) {
+        var methodCell = row[0];
+        var methodString = methodCell.cellEntry;
+        if (reservedWords.indexOf(methodString) !== -1) {
+            methodString = this.fitUtils.camelCase(methodString);
+            if(this.isReservedWord(methodString)) {
+                this[methodString](objectUnderTest, row);
+            }
+            else {
+                methodCell.status = "FAILED";
+                methodCell.msg = "reserved word: " + methodString;
+            }
+        }
+        else {
+            var results = this.methodFromRaw(row);
+            this.runRowTest(row[0], results, objectUnderTest, true, false);
+        }
+//        return {methodCell: methodCell, methodString: methodString, method: method, argsArray: argsArray};
     }
 
+    isReservedWord(methodString) {
+        return this[methodString] !== undefined;
+    }
+
+    runRowTest(resultingCell: CellWikiElement, results, objectUnderTest: any, valueToCompare: any, inverse: boolean) {
+            var argsArray = results.argsArray;
+            var method = results.method;
+
+            if (objectUnderTest.prototype[method.methodName] !== undefined) {
+                var result = objectUnderTest.prototype[method.methodName].apply(this, argsArray);
+                var compareResult = inverse? (result != valueToCompare) : (result == valueToCompare);
+                if (compareResult) {
+                    this.methodPassed(resultingCell, method);
+                }
+                else {
+                    this.methodFailed(resultingCell, method, result);
+                }
+            }
+            else {
+                this.methodDoesNotExist(resultingCell, method);
+            }
+    }
+
+    check(objectUnderTest: any, row: Array<CellWikiElement>) {
+
+        var results = this.methodFromRaw(row.slice(1, row.length-1));
+        var resultCell = row[row.length-1];
+        this.runRowTest(resultCell, results, objectUnderTest, resultCell.cellEntry, false);
+
+    }
+
+    checkNot(objectUnderTest: any, row: Array<CellWikiElement>) {
+        var results = this.methodFromRaw(row.slice(1, row.length-1));
+        var resultCell = row[row.length-1];
+        this.runRowTest(resultCell, results, objectUnderTest, resultCell.cellEntry, true);
+    }
+
+    reject(objectUnderTest: any, row: Array<CellWikiElement>) {
+
+        var results = this.methodFromRaw(row.slice(1));
+        this.runRowTest(row[0], results, objectUnderTest, false, false);
+    }
+
+    methodFromRaw(row) {
+        var methodString = row[0].cellEntry;
+        var argsArray = [];
+        if (methodString[methodString.length - 1] != ";") {
+            if(row.length > 1) {
+                argsArray.push(row[1].cellEntry);
+            }
+            for (var j = 2; j < row.length; j += 2) {
+                var argCell = row[j+1];
+                var methodCell = row[j];
+                argsArray.push(argCell.cellEntry);
+                methodString = methodString + " " + methodCell.cellEntry;
+            }
+        }
+        else {
+            for (var j = 1; j < row.length; j++) {
+                var argCell = row[j];
+                argsArray.push(argCell.cellEntry);
+            }
+            methodString = methodString.replace(";", "");
+        }
+        var method = this.createMethod(methodString);
+        return {argsArray: argsArray, method: method};
+    }
+
+    methodFailed(methodCell: CellWikiElement, method: Method, result: any) {
+        methodCell.status = "FAILED";
+        methodCell.msg = method.methodName + " failed. Got: " + result;
+    }
+
+    methodPassed(methodCell: CellWikiElement, method: Method) {
+        methodCell.status = "PASSED";
+        methodCell.msg = "found method: " + method.methodName;
+    }
+
+    methodDoesNotExist(methodCell: CellWikiElement, method: Method) {
+        methodCell.status = "FAILED";
+        methodCell.msg = "couldn't find method: " + method.methodName;
+    }
+
+    createMethod(methodString): Method {
+        return new Method(methodString, true);
+    }
 }
