@@ -265,12 +265,12 @@ class ScriptProcessor extends Processor {
                 this[methodString](objectUnderTest, row);
             }
             else {
-                methodCell.status = "FAILED";
+                methodCell.status = "IDLE";
                 methodCell.msg = "reserved word: " + methodString;
             }
         }
         else {
-            var results = this.methodFromRaw(row);
+            var results = this.methodFromRow(row);
             this.runRowTest(row[0], results, objectUnderTest, true, false);
         }
 //        return {methodCell: methodCell, methodString: methodString, method: method, argsArray: argsArray};
@@ -301,25 +301,44 @@ class ScriptProcessor extends Processor {
 
     check(objectUnderTest: any, row: Array<CellWikiElement>) {
 
-        var results = this.methodFromRaw(row.slice(1, row.length-1));
+        var results = this.methodFromRow(row.slice(1, row.length-1));
         var resultCell = row[row.length-1];
         this.runRowTest(resultCell, results, objectUnderTest, resultCell.cellEntry, false);
 
     }
 
     checkNot(objectUnderTest: any, row: Array<CellWikiElement>) {
-        var results = this.methodFromRaw(row.slice(1, row.length-1));
+        var results = this.methodFromRow(row.slice(1, row.length-1));
         var resultCell = row[row.length-1];
         this.runRowTest(resultCell, results, objectUnderTest, resultCell.cellEntry, true);
     }
 
     reject(objectUnderTest: any, row: Array<CellWikiElement>) {
 
-        var results = this.methodFromRaw(row.slice(1));
+        var results = this.methodFromRow(row.slice(1));
         this.runRowTest(row[0], results, objectUnderTest, false, false);
     }
 
-    methodFromRaw(row) {
+    ensure(objectUnderTest: any, row: Array<CellWikiElement>) {
+
+        var results = this.methodFromRow(row.slice(1));
+        this.runRowTest(row[0], results, objectUnderTest, true, false);
+    }
+
+    show(objectUnderTest: any, row: Array<CellWikiElement>) {
+
+        var results = this.methodFromRow(row.slice(1));
+        var method = results.method;
+        var argsArray = results.argsArray;
+        if (objectUnderTest.prototype[method.methodName] !== undefined) {
+            var result = objectUnderTest.prototype[method.methodName].apply(this, argsArray);
+            var cell = new CellWikiElement(result + "");
+            console.log(result);
+            row.push(cell);
+        }
+    }
+
+    methodFromRow(row) {
         var methodString = row[0].cellEntry;
         var argsArray = [];
         if (methodString[methodString.length - 1] != ";") {

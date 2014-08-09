@@ -5,8 +5,9 @@ class LoginDialogDriver {
     loginAttempts: number;
 
     constructor (userName: string, password: string) {
-        this.userName = userName
-        this.password = password
+        this.userName = userName;
+        this.password = password;
+        this.loginAttempts = 0;
     }
 
     loginWithUsernameAndPassword(userName: string, password: string): boolean {
@@ -23,5 +24,10 @@ class LoginDialogDriver {
 
     loginMessage(): string {
         return this.message;
+    }
+
+    numberOfLoginAttempts(): number {
+        console.log(this.loginAttempts);
+        return this.loginAttempts;
     }
 }
