@@ -43,12 +43,8 @@ class FitController{
     }
     runFitTestsOnPage() {
         console.log("Running fit tests");
-        for (var i=0;i<this.pageContents.length;i++) {
-            var wikiElement: WikiElement = this.pageContents[i];
-            if (wikiElement.type === 'TABLE') {
-                this.process(wikiElement);
-            }
-        }
+        var tables = _.filter(this.pageContents, function(element) { return element.type === 'TABLE';});
+        _.each(tables, (table) => {this.process(table)});
     }
 
     process(tableEl:TableWikiElement) {
