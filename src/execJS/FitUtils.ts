@@ -127,4 +127,28 @@ class Method {
         this.methodName = fitUtils.camelCase(methodString);
         this.isInput = isInput;
     }
+
+    passInput(objectUnderTest, data:any) {
+        if (objectUnderTest[this.methodName]=== undefined ||
+            typeof objectUnderTest[this.methodName] !== 'function') {
+            objectUnderTest[this.methodName] = data;
+        } else {
+            objectUnderTest[this.methodName](data);
+        }
+    }
+
+
+    fetchOutput(objectUnderTest) {
+        var retVal: any;
+        if (objectUnderTest[this.methodName]=== undefined ||
+            typeof objectUnderTest[this.methodName] !== 'function') {
+            if (objectUnderTest[this.methodName] !== undefined) {
+                retVal = objectUnderTest [this.methodName];
+            }
+        } else {
+            retVal = objectUnderTest[this.methodName]();
+        }
+
+        return retVal;
+    }
 }

@@ -63,16 +63,18 @@ class DecisionProcessor extends Processor {
                 var cell:CellWikiElement = row[j];
                 var method:Method = methods[j];
                 if (method.isInput) {
-                    objectUnderTest.prototype[method.methodName](cell.cellEntry);
+                    method.passInput(objectUnderTest, cell.cellEntry);
                 }
             }
-
+            if(objectUnderTest["execute"] !== undefined && typeof objectUnderTest["execute"] === "function") {
+                objectUnderTest["execute"]();
+            }
             for (var j = 0; j < row.length; j++) {
                 var cell: CellWikiElement = row[j];
                 var method:Method = methods[j];
                 if (!method.isInput) {
-                    var retVal = objectUnderTest.prototype[method.methodName]();
-                    if (retVal === cell.cellEntry) {
+                    var retVal = method.fetchOutput(objectUnderTest);
+                    if (retVal == cell.cellEntry) {
                         cell.status = "PASSED";
                     } else {
                         cell.status = "FAILED";
@@ -102,6 +104,7 @@ class DecisionProcessor extends Processor {
 }
 
 class QueryProcessor extends Processor {
+    
     process(tableEl: TableWikiElement) {
         var firstRow: Array<CellWikiElement> = tableEl.firstRow();
         var classToInit = firstRow[0].cellEntry;
@@ -124,6 +127,7 @@ class QueryProcessor extends Processor {
             cell.status = "PASSED";
         }
     }
+
     callQueryMethod(objectUnderTest, firstRow:Array<CellWikiElement>) {
         var queryParameter = firstRow[1].cellEntry;
         return objectUnderTest.prototype["query"](queryParameter);
@@ -153,6 +157,7 @@ class QueryProcessor extends Processor {
         }
         return matchedRow;
     }
+
     processRows(tableEl:TableWikiElement, fieldHeaders:Array<string>, results:Array<any>) {
         var surplus = this.matchResultsToTableAndReturnSurplus(results, fieldHeaders, tableEl);
         for (var i=2;i<tableEl.rows.length;i++) {
@@ -333,6 +338,7 @@ class ScriptProcessor extends Processor {
         if (objectUnderTest.prototype[method.methodName] !== undefined) {
             var result = objectUnderTest.prototype[method.methodName].apply(this, argsArray);
             var cell = new CellWikiElement(result + "");
+            cell.status = "SHOW";
             console.log(result);
             row.push(cell);
         }

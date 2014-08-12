@@ -30,7 +30,7 @@
                     <tr ng-repeat="row in element.rows track by $index">
                         <td
                            ng-repeat="cell in row track by $index"
-                           ng-class="{greenCell: cell.status === 'PASSED', redCell: cell.status === 'FAILED', yellowCell: cell.status === 'IGNORED'}"
+                           ng-class="{greenCell: cell.status === 'PASSED', redCell: cell.status === 'FAILED', yellowCell: cell.status === 'IGNORED', blueCell: cell.status === 'SHOW'}"
                            colspan="{{row.length<element.maxCols?($index===row.length-1?element.maxCols-row.length+1:1):1}}">
                             {{cell.cellEntry}}
                             <span ng-if="cell.status === 'FAILED' || cell.status === 'IGNORED'">
