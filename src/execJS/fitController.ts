@@ -1,5 +1,7 @@
 /// <reference path="FitUtils.ts"/>
 /// <reference path="FitProcessors.ts"/>
+/// <reference path="../../typeScriptHeaders/angularjs/angular.d.ts"/>
+/// <reference path="../../typeScriptHeaders/underscore/underscore.d.ts"/>
 angular.module('fitApp',[]);
 
 class FitController{
@@ -44,7 +46,7 @@ class FitController{
     runFitTestsOnPage() {
         console.log("Running fit tests");
         var tables = _.filter(this.pageContents, function(element) { return element.type === 'TABLE';});
-        _.each(tables, (table) => {this.process(table)});
+        _.each(tables, (table:TableWikiElement) => {this.process(table)});
     }
 
     process(tableEl:TableWikiElement) {
