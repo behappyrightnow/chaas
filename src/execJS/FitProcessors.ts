@@ -6,7 +6,7 @@ class Processor {
         this.fitUtils = fitUtils;
     }
     initializeClass(classToInit, classCell:CellWikiElement):any {
-        var objectUnderTest = window[classToInit];
+        var objectUnderTest = new window[classToInit];
         if (objectUnderTest === undefined) {
             //var msg =
             classCell.status = "FAILED";
@@ -46,12 +46,6 @@ class DecisionProcessor extends Processor {
                 method = this.createOutputMethod(methodString);
             }
             methods.push(method);
-            if (objectUnderTest.prototype[method.methodName] === undefined) {
-                cell.status = "FAILED";
-                cell.msg = "Method " + method.methodName + "() not found in class " + classToInit;
-            } else {
-                cell.status = "PASSED";
-            }
         }
         return methods;
     }

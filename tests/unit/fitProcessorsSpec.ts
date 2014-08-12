@@ -58,14 +58,15 @@ describe('FitProcessors', function () {
                 methods.push(decisionProcessor.createOutputMethod("quotient?"));
                 methods.push(decisionProcessor.createOutputMethod("remainder?"));
                 objectUnderTest = new window["Division"];
-                decisionProcessor.processRows(tableEl, methods, objectUnderTest);
             });
             it("should produce correct results", function() {
+                decisionProcessor.processRows(tableEl, methods, objectUnderTest);
                 expect(tableEl.rows[2][2].status).toBe("PASSED");
                 expect(tableEl.rows[2][3].status).toBe("PASSED");
                 expect(tableEl.rows[3][2].status).toBe("PASSED");
                 expect(tableEl.rows[3][3].status).toBe("PASSED");
             });
+
         });
         describe("handles classes with setters and getters correctly", function() {
             var tableEl: TableWikiElement;

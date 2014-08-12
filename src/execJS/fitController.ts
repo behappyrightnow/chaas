@@ -6,7 +6,7 @@ angular.module('fitApp',[])
             "This will map to a class called ShouldIBuyMilk. Each row in the table is a test.",
             "",
             "|should I buy milk|",
-            "|cash in wallet|credit card|pints of milk remaining|go to store?|",
+            "|cash in wallet|credit card|pints of chaas remaining|go to store?|",
             "|0|no|0|no|",
             "|10|no|0|yes|",
             "|0|yes|0|yes|",
