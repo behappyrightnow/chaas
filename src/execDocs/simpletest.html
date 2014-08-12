@@ -15,16 +15,16 @@
     <script src="../userJS/LoginDialogDriver.js"></script>
     <!-- User imports end here -->
 </head>
-<body ng-app="fitApp" ng-controller="fitController">
+<body ng-app="fitApp" ng-controller="FitController as fit">
     <h1>Example of executable documentation</h1>
     This will map to a class called ShouldIBuyMilk. Each row in the table is a test.
     <div class="col-md-12">
-        <button class="btn btn-primary" ng-click="runFitTestsOnPage()">RunTests</button><p/>
+        <button class="btn btn-primary" ng-click="fit.runFitTestsOnPage()">RunTests</button><p/>
     </div>
 
     <div class="col-md-12">
         <div class="panel panel-default">
-            <span ng-repeat="element in pageContents">
+            <span ng-repeat="element in fit.pageContents">
                 <span ng-if="element.type==='DEFAULT'">{{element.line}}</span>
                 <table class="table table-bordered table-condensed" ng-if="element.type==='TABLE'">
                     <tr ng-repeat="row in element.rows track by $index">
