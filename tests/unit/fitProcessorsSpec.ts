@@ -94,6 +94,8 @@ describe('FitProcessors', function () {
     });
     describe("Query Processor", function() {
         var queryProcessor: QueryProcessor;
+        var tableElement: TableWikiElement;
+        var objectUnderTest: any;
         beforeEach(function() {
             var fitUtils = new FitUtils();
             var wikiElements:Array<WikiElement> =
@@ -103,6 +105,107 @@ describe('FitProcessors', function () {
                     "|John Doe|23|M|",
                     "|Jane Poe|22|F|"
                 ]);
+            tableElement = wikiElements[0];
+            queryProcessor = new QueryProcessor(tableElement);
+            objectUnderTest = new window["PeopleOver"];
+        });
+        it("should not be undefined", function() {
+            expect(queryProcessor).not.toBe(undefined);
+        });
+        it("should pass query parameter to query method", function() {
+            queryProcessor.callQueryMethod(objectUnderTest, tableElement.rows[0]);
+            expect(objectUnderTest.queryParam).toEqual('21');
+        });
+        it("should return results from query method", function() {
+            var results = queryProcessor.callQueryMethod(objectUnderTest, tableElement.rows[0]);
+            var peopleOver = new PeopleOver();
+            expect(results).toEqual(peopleOver.query(21));
+        });
+        it("should pluck field headers", function() {
+            var fieldHeaders = queryProcessor.processFieldHeadersIn(tableElement);
+            expect(fieldHeaders).toEqual(['name', 'age','sex']);
+        });
+        describe("query method detection", function() {
+            it("should detect query method properly", function() {
+                queryProcessor.checkQueryMethodIn(objectUnderTest, tableElement.rows[0], "PeopleOver");
+                expect(tableElement.rows[0][1].status).toEqual("PASSED");
+                expect(tableElement.rows[0][1].msg).toBeNull();
+            });
+            it("should fail if query method is not found", function() {
+                tableElement.rows[0][0].cellEntry = "query:people under";
+                objectUnderTest = new window['PeopleUnder'];
+                queryProcessor.checkQueryMethodIn(objectUnderTest, tableElement.rows[0], "PeopleUnder");
+                expect(tableElement.rows[0][1].status).toEqual("FAILED");
+                expect(tableElement.rows[0][1].msg).toEqual('Method query() not found in class PeopleUnder');
+            });
+        });
+        describe("should match results to table and return surplus", function() {
+            it("all rows should be found", function() {
+                var fieldHeaders = ['name', 'age', 'sex'];
+                var surplus = queryProcessor.matchResultsToTableAndReturnSurplus(objectUnderTest.query(21), fieldHeaders, tableElement);
+                expect(surplus.length).toBe(0);
+                expect(tableElement.rows[2][0].foundIndex).toBe(1);
+                expect(tableElement.rows[3][0].foundIndex).toBe(0);
+            });
+            it("should return surplus properly", function() {
+                var fieldHeaders = ['name', 'age', 'sex'];
+                var results = objectUnderTest.query(21);
+                results.push({name:'Alice', age:28, sex:'Z'});
+
+                var surplus = queryProcessor.matchResultsToTableAndReturnSurplus(results, fieldHeaders, tableElement);
+                expect(surplus.length).toBe(1);
+                expect(tableElement.rows[2][0].foundIndex).toBe(1);
+                expect(tableElement.rows[3][0].foundIndex).toBe(0);
+                expect(surplus[0]).toBe(2);
+            });
+
+            describe("row matching", function() {
+                var fieldHeaders: Array<string>;
+                beforeEach(function() {
+                    fieldHeaders = ["name", "age", "sex"];
+                })
+                it("should not find any match", function() {
+                    var resultRow = {
+                        name: "Alice",
+                        age: 28,
+                        sex: 'Z'
+                    };
+                    expect(queryProcessor.matchedRow(resultRow, fieldHeaders, tableElement)).toBe(-1);
+                });
+                it("should match one parameter - F", function() {
+                    var resultRow = {
+                        name: "Alice",
+                        age: 28,
+                        sex: 'F'
+                    };
+                    expect(queryProcessor.matchedRow(resultRow, fieldHeaders, tableElement)).toBe(3);
+                });
+                it("should match one parameter - M", function() {
+                    var resultRow = {
+                        name: "Alice",
+                        age: 28,
+                        sex: 'M'
+                    };
+                    expect(queryProcessor.matchedRow(resultRow, fieldHeaders, tableElement)).toBe(2);
+                });
+                it("should match one parameter - age", function() {
+                    var resultRow = {
+                        name: "Alice",
+                        age: 23,
+                        sex: 'Z'
+                    };
+                    expect(queryProcessor.matchedRow(resultRow, fieldHeaders, tableElement)).toBe(2);
+                });
+                it("should match one parameter - name", function() {
+                    var resultRow = {
+                        name: "Jane Poe",
+                        age: 28,
+                        sex: 'Z'
+                    };
+                    expect(queryProcessor.matchedRow(resultRow, fieldHeaders, tableElement)).toBe(3);
+                });
+            });
+
         });
 
     });
@@ -136,4 +239,26 @@ class Addition {
     sum(): number{
         return Number(this.a) + Number(this.b);
     }
+}
+
+class PeopleOver {
+    queryParam: number;
+    query(queryParam: number) {
+        this.queryParam = queryParam;
+        return [
+            {
+                "name": "Jane Poe",
+                "age": 22,
+                "sex": 'F'
+            },
+            {
+                "name": "John Doe",
+                "age": 23,
+                "sex": 'M'
+            }
+        ]
+    }
+}
+class PeopleUnder {
+
 }

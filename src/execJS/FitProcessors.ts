@@ -120,7 +120,7 @@ class QueryProcessor extends Processor {
 
     checkQueryMethodIn(objectUnderTest:any, firstRow:Array<CellWikiElement>, classToInit: string) {
         var cell:CellWikiElement = firstRow[1];
-        if (objectUnderTest.prototype["query"] === undefined) {
+        if (objectUnderTest["query"] === undefined) {
             cell.status = "FAILED";
             cell.msg = "Method query() not found in class " + classToInit;
         } else {
@@ -130,7 +130,7 @@ class QueryProcessor extends Processor {
 
     callQueryMethod(objectUnderTest, firstRow:Array<CellWikiElement>) {
         var queryParameter = firstRow[1].cellEntry;
-        return objectUnderTest.prototype["query"](queryParameter);
+        return objectUnderTest["query"](queryParameter);
     }
 
     processFieldHeadersIn(tableEl:TableWikiElement): Array<string> {
@@ -146,7 +146,7 @@ class QueryProcessor extends Processor {
             for (var colIndex=0;colIndex<fieldHeaders.length;colIndex++) {
                 var actual = resultRow[fieldHeaders[colIndex]];
                 var expected = row[colIndex].cellEntry;
-                if (actual === expected) {
+                if (actual == expected) {
                     matchCount++;
                     if (matchCount > highestMatchCount) {
                         highestMatchCount = matchCount;
