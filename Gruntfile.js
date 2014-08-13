@@ -11,6 +11,7 @@ module.exports = function(grunt) {
       '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
+    /** // Don't need these at the moment...
     concat: {
       options: {
         banner: '<%= banner %>',
@@ -30,6 +31,7 @@ module.exports = function(grunt) {
         dest: 'dist/<%= pkg.name %>.min.js'
       }
     },
+    // **/
     jshint: {
       options: {
         curly: true,
@@ -64,33 +66,38 @@ module.exports = function(grunt) {
         files: '<%= jshint.lib_test.src %>',
         tasks: ['jshint:lib_test']
       },
-      prd: { // WIP...
-        files: ['src/**.js'],
-        tasks: ['connect:dev'],
-        livereload: true,
+      examples: {
+        files: ['examples/**/*.*'],
+        options: {
+          livereload: true
+        }
       }
     },
-    connect: { // WIP...
-      dev: {
+    connect: {
+      examples: {
         /** defaults
-        host: 'localhost',
-        port: 9000
+        host: '0.0.0.0', // alias to localhost
+        port: 8000
         */
-        livereload: true,
+        options: {
+          base: [ 'src/', 'examples/' ],
+        }
       }
     }
   });
 
   // These plugins provide necessary tasks.
+  /** // Unused at the moment...
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  // **/
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
+  grunt.registerTask('default', ['jshint', /*'concat', 'uglify' */]);
 
-  grunt.registerTask('serve', ['connect:dev']);
+  grunt.registerTask('serve', ['connect:examples', 'watch']);
 
 };
