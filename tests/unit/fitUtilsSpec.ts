@@ -75,5 +75,25 @@ describe('FitUtils', function () {
             });
         });
 
-    })
+    });
+    describe("Default Wiki Element", function() {
+        var defaultWikiElement: DefaultElement;
+        beforeEach(function() {
+            defaultWikiElement = new DefaultElement("Hello, I have a CamelCase link here.");
+        });
+        it("type is default", function() {
+            expect(defaultWikiElement.type).toBe("DEFAULT");
+        });
+        it("should break line into elements", function() {
+            var contents = defaultWikiElement.contents;
+            expect(contents.length).toBe(3);
+            expect(contents[0].text).toBe("Hello, I have a ");
+            expect(contents[0].type).toBe("TEXT");
+            expect(contents[1].text).toBe("CamelCase");
+            expect(contents[1].url).toBe("/CamelCase");
+            expect(contents[1].type).toBe("LINK");
+            expect(contents[2].text).toBe(" link here.");
+            expect(contents[2].type).toBe("TEXT");
+        });
+    });
 });

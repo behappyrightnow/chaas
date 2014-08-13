@@ -9,13 +9,14 @@
     <script src="../execJS/FitUtils.js"></script>
     <script src="../execJS/FitProcessors.js"></script>
     <script src="../execJS/fitController.js"></script>
+    <script src="../execJS/standaloneController.js"></script>
     <!-- User imports begin here -->
     <script src="../userJS/ShouldIBuyChaas.js"></script>
     <script src="../userJS/EmployeesHiredBefore.js"></script>
     <script src="../userJS/LoginDialogDriver.js"></script>
     <!-- User imports end here -->
 </head>
-<body ng-app="fitApp" ng-controller="FitController as fit">
+<body ng-app="fitApp" ng-controller="StandaloneController as fit">
     <h1>Example of executable documentation</h1>
     <div class="col-md-12">
         <button class="btn btn-primary" ng-click="fit.runFitTestsOnPage()">RunTests</button><p/>
@@ -24,7 +25,13 @@
     <div class="col-md-12">
         <div class="panel panel-default">
             <span ng-repeat="element in fit.pageContents">
-                <span ng-if="element.type==='DEFAULT'">{{element.line}}</span>
+                <span ng-if="element.type==='DEFAULT'">
+                    <span ng-repeat="content in element.contents">
+                        <span ng-if="content.type==='TEXT'">{{content.text}}</span>
+                        <span ng-if="content.type==='LINK'"><a href="{{content.url}}">{{content.text}}</a></span>
+                    </span>
+
+                </span>
                 <table class="table table-bordered table-condensed" ng-if="element.type==='TABLE'">
                     <tr ng-repeat="row in element.rows track by $index">
                         <td

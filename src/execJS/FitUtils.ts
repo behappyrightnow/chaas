@@ -58,12 +58,145 @@ class FitUtils {
 interface WikiElement {
     type: string;
 }
+
 class DefaultElement implements WikiElement {
-    line: string;
+    contents: Array<BasicElement>;
     type: string;
     constructor(line:string) {
-        this.line = line;
+        this.contents = new Array<any>();
         this.type = "DEFAULT";
+        this.process(line);
+    }
+    process(line:string) {
+        var state = new WikiState.MinusOne("","");
+        var accumulation = new Array<WikiState.State>();
+        state.transition(accumulation, line, 0);
+        for (var i = 0; i < accumulation.length;i++) {
+            console.log("["+accumulation[i].text+"]");
+            this.contents.push(accumulation[i].createAtomicElement());
+        }
+    }
+}
+
+/**
+ * See FitUtils_automata.JPG in the execJS folder to understand the finite automata implemented here.
+ */
+module WikiState {
+    export class State {
+        text: string;
+        oldText: string;
+        constructor(text:string, oldText: string) {
+            this.text = text;
+            this.oldText = oldText;
+        }
+        transition(contents:Array<State>,line:string, index:number) {
+            var character:string = line[index];
+            var state:State = this.nextState(contents, character);
+            if (index < line.length-1) {
+                state.transition(contents, line, index+1);
+            } else {
+                state.endInputTransition(contents);
+            }
+        }
+        endInputTransition(contents:Array<State>) {
+            throw "Can't call directly";
+        }
+        nextState(contents: Array<State>,character:string):State {
+            throw "Can't call directly";
+        }
+        createAtomicElement():BasicElement {
+            throw "Can't call directly";
+        }
+    }
+    export class MinusOne extends State {
+        nextState(contents: Array<State>,character:string):State {
+            if (character>='A' && character<='Z') {
+                return new Zero(character, this.text)
+            } else {
+                return new MinusOne(this.text+character,"")
+            }
+        }
+        endInputTransition(contents:Array<State>) {
+            contents.push(this);
+        }
+        createAtomicElement() {
+            return new TextElement(this.text);
+        }
+    }
+    export class Zero extends State {
+        nextState(contents: Array<State>,character:string):State {
+            if (character>='a' && character<='z') {
+                return new One(this.text+character, this.oldText);
+            } else {
+                return new MinusOne(this.oldText+this.text+character,"");
+            }
+        }
+        endInputTransition(contents:Array<State>) {
+            contents.push(new MinusOne(this.oldText, ""));
+        }
+    }
+    export class One extends State {
+        nextState(contents: Array<State>,character:string):State {
+            if (character>='a' && character<='z') {
+                return new One(this.text+character, this.oldText)
+            } else if (character>='A' && character<='Z') {
+                return new Two(this.text+character, this.oldText)
+            } else {
+                return new MinusOne(this.oldText+this.text+character, "")
+            }
+        }
+
+        endInputTransition(contents:Array<State>){
+            contents.push(new MinusOne(this.oldText, ""));
+        }
+    }
+    export class Two extends State {
+        nextState(contents: Array<State>,character:string):State {
+            if ((character>='a' && character<='z')||(character>='A' && character<='Z')) {
+                return new Two(this.text+character, this.oldText)
+            } else {
+                contents.push(new MinusOne(this.oldText,""));
+                return new Three(this.text,character);
+            }
+        }
+
+        endInputTransition(contents:Array<State>){
+            contents.push(new Three(this.text,""));
+        }
+    }
+    export class Three extends State {
+        nextState(contents: Array<State>,character:string):State {
+            contents.push(this);
+            return new MinusOne(this.oldText+character,"");
+        }
+
+        endInputTransition(contents:Array<State>){
+
+        }
+        createAtomicElement() {
+            return new LinkElement(this.text);
+        }
+    }
+}
+interface BasicElement {
+    text:string;
+}
+class TextElement implements BasicElement {
+    text: string;
+    type: string;
+    constructor(text:string) {
+        this.text = text;
+        this.type = "TEXT";
+    }
+}
+class LinkElement implements BasicElement{
+    url: string;
+    text: string;
+    type: string;
+    constructor(text:string) {
+        this.text = text;
+        this.url = "/"+text;
+        this.type = "LINK";
     }
 }
 

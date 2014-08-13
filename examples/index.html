@@ -1,10 +1,65 @@
-<!DOCTYPE html>
 <html>
-  <body>
-    <script type="text/javascript">
-        // Sanity check for livereload
-        document.write(new Date);
-    </script>
-    <script type="text/javascript" src="/execJS/fitController.ts"></script>
-  </body>
+<head>
+    <title>Example of executable documentation</title>
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="/jquery/dist/jquery.js"></script>
+    <script src="/angular/angular.js"></script>
+    <script src="/underscore/underscore.js"></script>
+    <script src="/execJS/FitUtils.js"></script>
+    <script src="/execJS/FitProcessors.js"></script>
+    <script src="/execJS/fitController.js"></script>
+    <!-- User imports begin here -->
+    <script src="/userJS/ShouldIBuyChaas.js"></script>
+    <script src="/userJS/EmployeesHiredBefore.js"></script>
+    <script src="/userJS/LoginDialogDriver.js"></script>
+    <!-- User imports end here -->
+</head>
+<body ng-app="fitApp" ng-controller="FitController as fit">
+    <h1>Example of executable documentation</h1>
+    <div class="col-md-12">
+        <button class="btn btn-primary" ng-click="fit.runFitTestsOnPage()">RunTests</button><p/>
+    </div>
+
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <span ng-repeat="element in fit.pageContents">
+                <span ng-if="element.type==='DEFAULT'">
+                    <span ng-repeat="content in element.contents">
+                        <span ng-if="content.type==='TEXT'">{{content.text}}</span>
+                        <span ng-if="content.type==='LINK'"><a href="{{content.url}}">{{content.text}}</a></span>
+                    </span>
+
+                </span>
+                <table class="table table-bordered table-condensed" ng-if="element.type==='TABLE'">
+                    <tr ng-repeat="row in element.rows track by $index">
+                        <td
+                           ng-repeat="cell in row track by $index"
+                           ng-class="{greenCell: cell.status === 'PASSED', redCell: cell.status === 'FAILED', yellowCell: cell.status === 'IGNORED', blueCell: cell.status === 'SHOW'}"
+                           colspan="{{row.length<element.maxCols?($index===row.length-1?element.maxCols-row.length+1:1):1}}">
+                            {{cell.cellEntry}}
+                            <span ng-if="cell.status === 'FAILED' || cell.status === 'IGNORED'">
+                                <br/>&nbsp;<p/>
+                                <span ng-if="cell.msg !== null"><i>{{cell.msg}}</i></span>
+                                <span ng-if="cell.msg === null">
+                                    <span ng-if="cell.expected !== null && cell.expected !==''">
+                                        Expected: <i>{{cell.expected}}</i><br/>
+                                        But got: <i>{{cell.actual}}</i>
+                                    </span>
+                                    <span ng-if="cell.expected === null || cell.expected === ''">
+                                        <i>{{cell.actual}}</i>
+                                    </span>
+                                </span>
+                            </span>
+
+                        </td>
+                    </tr>
+                </table>
+
+                <br/>
+            </span>
+
+        </div>
+    </div>
+</body>
 </html>
