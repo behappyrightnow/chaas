@@ -1,9 +1,16 @@
 /// <reference path="FitUtils.ts"/>
 /// <reference path="FitProcessors.ts"/>
-angular.module('fitApp',[])
-  .controller('fitController', function ($scope) {
-        $scope.pageContents = fitUtils.wikiData([
-            "This will map to a class called ShouldIBuyChaas. Each row in the table is a test.",
+
+/// <reference path="../../typeScriptHeaders/angularjs/angular.d.ts"/>
+/// <reference path="../../typeScriptHeaders/underscore/underscore.d.ts"/>
+angular.module('fitApp',[]);
+
+class FitController{
+    pageContents:Array<WikiElement>;
+
+    constructor(){
+        this.pageContents = fitUtils.wikiData([
+            "This will map to a class called ShouldIBuyMilk. Each row in the table is a test.",
             "",
             "|should I buy chaas|",
             "|cash in wallet|credit card|pints of chaas remaining|go to store?|",
@@ -35,35 +42,33 @@ angular.module('fitApp',[])
             "|ensure|login with username|Bob|and password|xyzzy|",
             "|note|this is a comment|",
             "|show|number of login attempts|"
-        ])
+        ]);
+    }
+    runFitTestsOnPage() {
+        console.log("Running fit tests");
+        var tables = _.filter(this.pageContents, function(element) { return element.type === 'TABLE';});
+        _.each(tables, (table:TableWikiElement) => {this.process(table)});
+    }
 
-        $scope.runFitTestsOnPage = function() {
-            console.log("Running fit tests");
-            for (var i=0;i<$scope.pageContents.length;i++) {
-                var wikiElement: WikiElement = $scope.pageContents[i];
-                if (wikiElement.type === 'TABLE') {
-                    $scope.process(wikiElement);
-                }
-            }
-        }
+    process(tableEl:TableWikiElement) {
+        var processor:Processor = this.createProcessor(tableEl.firstRow());
+        processor.process(tableEl);
+    }
 
-        $scope.process = function(tableEl:TableWikiElement) {
-            var processor:Processor = createProcessor(tableEl.firstRow());
-            processor.process(tableEl);
-        }
-
-        function createProcessor(firstRow:any):Processor {
-            if (firstRow.length === 1) {
-                return new DecisionProcessor(fitUtils);
+    createProcessor(firstRow:any):Processor {
+        if (firstRow.length === 1) {
+            return new DecisionProcessor(fitUtils);
+        } else {
+            var firstCell:string = firstRow[0].cellEntry.toUpperCase();
+            if (firstCell.indexOf("QUERY") !== -1) {
+                return new QueryProcessor(fitUtils);
+            } else if (firstCell.indexOf("SCRIPT") !== -1) {
+                return new ScriptProcessor(fitUtils);
             } else {
-                var firstCell:string = firstRow[0].cellEntry.toUpperCase();
-                if (firstCell.indexOf("QUERY") !== -1) {
-                    return new QueryProcessor(fitUtils);
-                } else if (firstCell.indexOf("SCRIPT") !== -1) {
-                    return new ScriptProcessor(fitUtils);
-                } else {
-                    throw "Could not understand which Processor needs to be instantiated!";
-                }
+                throw "Could not understand which Processor needs to be instantiated!";
             }
         }
-  });
+    }
+
+
+}
