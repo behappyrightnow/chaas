@@ -20,6 +20,7 @@ class Processor {
         throw "Can't call Processor directly. Please extend in subclass.";
     }
 }
+
 class DecisionProcessor extends Processor {
     process(tableEl: TableWikiElement) {
         var firstRow: Array<CellWikiElement> = tableEl.firstRow();

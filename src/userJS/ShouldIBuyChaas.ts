@@ -1,4 +1,4 @@
-class ShouldIBuyMilk {
+class ShouldIBuyChaas {
     cashInWallet: number;
     creditCard: string;
     pintsOfChaasRemaining: number;

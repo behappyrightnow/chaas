@@ -211,7 +211,16 @@ describe('FitProcessors', function () {
 
     });
     describe("Script Processor", function() {
-
+        var fitUtils = new FitUtils();
+            var wikiElements:Array<WikiElement> =
+                fitUtils.wikiData([
+                    "|script|counter|10|",
+                    "|show|increment count by one|11|",
+                    "|Jane Poe|22|F|"
+                ]);
+            tableElement = wikiElements[0];
+            queryProcessor = new QueryProcessor(tableElement);
+            objectUnderTest = new window["PeopleOver"];
     });
 });
 
@@ -260,6 +269,25 @@ class PeopleOver {
         ]
     }
 }
+
 class PeopleUnder {
 
+}
+
+class Counter {
+    count: number;
+
+    constructor(startingPoint: number) {
+        this.count = Number(startingPoint);
+    }
+
+    incrementCountByOne(): string {
+        this.count += 1;
+        return "The count is " + this.count;
+    }
+
+    incrementBy(by: number): string {
+        this.count += Number(by);
+        return "The count is " + this.count;
+    }
 }

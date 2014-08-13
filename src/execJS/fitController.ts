@@ -3,9 +3,9 @@
 angular.module('fitApp',[])
   .controller('fitController', function ($scope) {
         $scope.pageContents = fitUtils.wikiData([
-            "This will map to a class called ShouldIBuyMilk. Each row in the table is a test.",
+            "This will map to a class called ShouldIBuyChaas. Each row in the table is a test.",
             "",
-            "|should I buy milk|",
+            "|should I buy chaas|",
             "|cash in wallet|credit card|pints of chaas remaining|go to store?|",
             "|0|no|0|no|",
             "|10|no|0|yes|",
