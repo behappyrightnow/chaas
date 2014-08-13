@@ -5,7 +5,7 @@ class Processor {
         this.fitUtils = fitUtils;
     }
     initializeClass(classToInit, classCell:CellWikiElement):any {
-        var objectUnderTest = new window[classToInit];
+        var objectUnderTest = new window[classToInit]();
         if (objectUnderTest === undefined) {
             //var msg =
             classCell.status = "FAILED";
@@ -225,32 +225,82 @@ class QueryProcessor extends Processor {
     }
 }
 
+function applyConstruct(ctor, params) {
+    var obj, newobj;
+
+    // Create the object with the desired prototype
+    if (typeof Object.create === "function") {
+        // ECMAScript 5
+        obj = Object.create(ctor.prototype);
+    }
+    else if ({}.__proto__) {
+        // Non-standard __proto__, supported by some browsers
+        obj = {};
+        obj.__proto__ = ctor.prototype;
+        if (obj.__proto__ !== ctor.prototype) {
+            // Setting it didn't work
+            obj = makeObjectWithFakeCtor();
+        }
+    }
+    else {
+        // Fallback
+        obj = makeObjectWithFakeCtor();
+    }
+
+    // Set the object's constructor
+    obj.constructor = ctor;
+
+    // Apply the constructor function
+    newobj = ctor.apply(obj, params);
+
+    // If a constructor function returns an object, that
+    // becomes the return value of `new`, so we handle
+    // that here.
+    if (typeof newobj === "object") {
+        obj = newobj;
+    }
+
+    // Done!
+    return obj;
+
+    // Subroutine for building objects with specific prototypes
+    function makeObjectWithFakeCtor() {
+        function fakeCtor() {
+        }
+        fakeCtor.prototype = ctor.prototype;
+        return new fakeCtor();
+    }
+}
 class ScriptProcessor extends Processor {
     process(tableEl:TableWikiElement) {
         var firstRow: Array<CellWikiElement> = tableEl.firstRow();
         var classToInit = firstRow[1].cellEntry;
         classToInit = this.fitUtils.camelCaseClass(classToInit);
-        var objectUnderTest = this.initializeClass(classToInit, firstRow[1]);
         var args:Array<string> = new Array<string>();
         for (var i=2;i<firstRow.length;i++) {
             args.push(firstRow[i].cellEntry);
         }
-        try {
-            objectUnderTest.apply(this, args);
-            console.log(firstRow, firstRow.length);
-            for (var j=2;j<firstRow.length;j++) {
-                firstRow[j].status = "PASSED";
-            }
-        }
-        catch(err) {
-            for (var i=2;i<firstRow.length;i++) {
-                firstRow[i].status = "FAILED";
-                firstRow[i].msg = "Exception thrown";
-            }
-        }
+        var objectUnderTest = this.callConstructor(classToInit, args, firstRow);
 
         var reservedWords:Array<string> = ["reject", "check", "note", "check not", "ensure", "show"];
         this.processRows(tableEl, reservedWords, objectUnderTest);
+    }
+
+    callConstructor(classToInit, args, firstRow) {
+        try {
+            var objectUnderTest = applyConstruct(window[classToInit], args);
+            console.log(firstRow, firstRow.length);
+            for (var j = 2; j < firstRow.length; j++) {
+                firstRow[j].status = "PASSED";
+            }
+            return objectUnderTest;
+        }
+        catch (err) {
+            for (var i = 2; i < firstRow.length; i++) {
+                firstRow[i].status = "FAILED";
+                firstRow[i].msg = "Exception thrown "+err;
+            }
+        }
     }
 
     processRows(tableEl: TableWikiElement, reservedWords:Array<string>, objectUnderTest:any) {

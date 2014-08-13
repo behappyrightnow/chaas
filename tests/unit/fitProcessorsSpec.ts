@@ -216,18 +216,32 @@ describe('FitProcessors', function () {
         });
 
     });
-    describe("Script Processor", function() {
-        var fitUtils = new FitUtils();
+    describe("Script Processor", function () {
+        var scriptProcessor: ScriptProcessor;
         var tableElement: TableWikiElement;
-        var wikiElements:Array<WikiElement> = fitUtils.wikiData([
+        var classToInit: string;
+        var objectUnderTest: any;
+        beforeEach(function () {
+            var wikiElements = fitUtils.wikiData([
                 "|script|counter|10|",
                 "|show|increment count by one|11|",
                 "|increment|by|2|",
                 "|check|count|13|"
             ]);
-        tableElement = wikiElements[0];
-        queryProcessor = new QueryProcessor(tableElement);
-        objectUnderTest = new window["PeopleOver"];
+            tableElement = wikiElements[0];
+            scriptProcessor = new ScriptProcessor(tableElement);
+            classToInit = "testClasses.Counter";
+        });
+        it("should not be undefined", function() {
+            expect(scriptProcessor).not.toBe(undefined);
+            expect(scriptProcessor).not.toBeNull();
+        });
+        it("should call constructor correctly", function() {
+            var firstRow = tableElement.rows[0];
+            var objectUnderTest = scriptProcessor.callConstructor(classToInit, ["10"], firstRow);
+            expect(firstRow[2].status).toBe("PASSED");
+        })
+
     });
 });
 module testClasses {
