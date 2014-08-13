@@ -95,5 +95,12 @@ describe('FitUtils', function () {
             expect(contents[2].text).toBe(" link here.");
             expect(contents[2].type).toBe("TEXT");
         });
+        it("should deal with blank lines", function() {
+            defaultWikiElement = new DefaultElement("");
+            var contents = defaultWikiElement.contents;
+            expect(contents.length).toBe(1);
+            expect(contents[0].text).toBe("");
+            expect(contents[0].type).toBe("TEXT");
+        });
     });
 });

@@ -91,6 +91,10 @@ module WikiState {
         }
         transition(contents:Array<State>,line:string, index:number) {
             var character:string = line[index];
+            if (character === undefined) {
+                this.endInputTransition(contents);
+                return;
+            }
             var state:State = this.nextState(contents, character);
             if (index < line.length-1) {
                 state.transition(contents, line, index+1);
