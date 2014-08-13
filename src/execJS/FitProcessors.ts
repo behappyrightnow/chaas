@@ -46,6 +46,12 @@ class DecisionProcessor extends Processor {
                 method = this.createOutputMethod(methodString);
             }
             methods.push(method);
+            if (objectUnderTest[method.methodName] === undefined) {
+                cell.status = "FAILED";
+                cell.msg = classToInit+": No input method called '"+method.methodName+"'. Either initialize in constructor or provide a function with this name."
+            } else {
+                cell.status = "PASSED";
+            }
         }
         return methods;
     }

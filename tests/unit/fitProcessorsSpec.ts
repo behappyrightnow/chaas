@@ -42,6 +42,7 @@ describe('FitProcessors', function () {
             var method = decisionProcessor.createOutputMethod(methodString);
             expect(method.methodName).toBe("outputMethod");
         });
+
         describe("handles classes with attributes and execute() correctly", function() {
             var tableEl: TableWikiElement;
             var methods: Array<Method>;
@@ -66,7 +67,14 @@ describe('FitProcessors', function () {
                 expect(tableEl.rows[3][2].status).toBe("PASSED");
                 expect(tableEl.rows[3][3].status).toBe("PASSED");
             });
-
+            it("should barf when object has no input accessors", function() {
+                objectUnderTest = new window["DivisionNoInputAccessors"];
+                decisionProcessor.processMethods(tableEl, objectUnderTest, "DivisionNoInputAccessors");
+                expect(tableEl.rows[1][0].status).toBe("FAILED");
+                expect(tableEl.rows[1][0].msg).toEqual("DivisionNoInputAccessors: No input method called 'numerator'. Either initialize in constructor or provide a function with this name.");
+                expect(tableEl.rows[1][1].status).toBe("FAILED");
+                expect(tableEl.rows[1][1].msg).toEqual("DivisionNoInputAccessors: No input method called 'denominator'. Either initialize in constructor or provide a function with this name.");
+            });
         });
         describe("handles classes with setters and getters correctly", function() {
             var tableEl: TableWikiElement;
@@ -211,7 +219,7 @@ describe('FitProcessors', function () {
 
     });
     describe("Script Processor", function() {
-        var fitUtils = new FitUtils();
+        /*var fitUtils = new FitUtils();
             var wikiElements:Array<WikiElement> =
                 fitUtils.wikiData([
                     "|script|counter|10|",
@@ -220,11 +228,11 @@ describe('FitProcessors', function () {
                 ]);
             tableElement = wikiElements[0];
             queryProcessor = new QueryProcessor(tableElement);
-            objectUnderTest = new window["PeopleOver"];
+            objectUnderTest = new window["PeopleOver"];*/
     });
 });
 
-class Division {
+class DivisionNoInputAccessors {
     numerator: number;
     denominator: number;
     quotient: number;
@@ -236,6 +244,22 @@ class Division {
     }
 
 }
+class Division {
+    numerator: number;
+    denominator: number;
+    quotient: number;
+    remainder: number;
+    constructor() {
+        this.numerator = 0;
+        this.denominator = 1;
+    }
+    execute() {
+        this.quotient = Math.floor(this.numerator / this.denominator);
+        this.remainder = this.numerator % this.denominator;
+    }
+
+}
+
 
 class Addition {
     a: number;
