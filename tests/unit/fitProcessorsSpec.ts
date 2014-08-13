@@ -58,7 +58,7 @@ describe('FitProcessors', function () {
                 methods.push(decisionProcessor.createInputMethod("denominator"));
                 methods.push(decisionProcessor.createOutputMethod("quotient?"));
                 methods.push(decisionProcessor.createOutputMethod("remainder?"));
-                objectUnderTest = new window["Division"];
+                objectUnderTest = new window.testClasses["Division"];
             });
             it("should produce correct results", function() {
                 decisionProcessor.processRows(tableEl, methods, objectUnderTest);
@@ -68,7 +68,7 @@ describe('FitProcessors', function () {
                 expect(tableEl.rows[3][3].status).toBe("PASSED");
             });
             it("should barf when object has no input accessors", function() {
-                objectUnderTest = new window["DivisionNoInputAccessors"];
+                objectUnderTest = new window.testClasses["DivisionNoInputAccessors"];
                 decisionProcessor.processMethods(tableEl, objectUnderTest, "DivisionNoInputAccessors");
                 expect(tableEl.rows[1][0].status).toBe("FAILED");
                 expect(tableEl.rows[1][0].msg).toEqual("DivisionNoInputAccessors: No input method called 'numerator'. Either initialize in constructor or provide a function with this name.");
@@ -90,7 +90,7 @@ describe('FitProcessors', function () {
                 methods.push(decisionProcessor.createInputMethod("first"));
                 methods.push(decisionProcessor.createInputMethod("second"));
                 methods.push(decisionProcessor.createOutputMethod("sum?"));
-                objectUnderTest = new window["Addition"];
+                objectUnderTest = new window.testClasses["Addition"];
                 decisionProcessor.processRows(tableEl, methods, objectUnderTest);
             });
             it("should produce correct results", function() {
@@ -116,7 +116,7 @@ describe('FitProcessors', function () {
                 ]);
             tableElement = wikiElements[0];
             queryProcessor = new QueryProcessor(tableElement);
-            objectUnderTest = new window["PeopleOver"];
+            objectUnderTest = new window.testClasses["PeopleOver"];
         });
         it("should not be undefined", function() {
             expect(queryProcessor).not.toBe(undefined);
@@ -127,7 +127,7 @@ describe('FitProcessors', function () {
         });
         it("should return results from query method", function() {
             var results = queryProcessor.callQueryMethod(objectUnderTest, tableElement.rows[0]);
-            var peopleOver = new PeopleOver();
+            var peopleOver = new testClasses.PeopleOver();
             expect(results).toEqual(peopleOver.query(21));
         });
         it("should pluck field headers", function() {
@@ -142,7 +142,7 @@ describe('FitProcessors', function () {
             });
             it("should fail if query method is not found", function() {
                 tableElement.rows[0][0].cellEntry = "query:people under";
-                objectUnderTest = new window['PeopleUnder'];
+                objectUnderTest = new window.testClasses['PeopleUnder'];
                 queryProcessor.checkQueryMethodIn(objectUnderTest, tableElement.rows[0], "PeopleUnder");
                 expect(tableElement.rows[0][1].status).toEqual("FAILED");
                 expect(tableElement.rows[0][1].msg).toEqual('Method query() not found in class PeopleUnder');
@@ -231,87 +231,94 @@ describe('FitProcessors', function () {
             objectUnderTest = new window["PeopleOver"];*/
     });
 });
+module testClasses {
+    export class DivisionNoInputAccessors {
+        numerator:number;
+        denominator:number;
+        quotient:number;
+        remainder:number;
 
-class DivisionNoInputAccessors {
-    numerator: number;
-    denominator: number;
-    quotient: number;
-    remainder: number;
+        execute() {
+            this.quotient = Math.floor(this.numerator / this.denominator);
+            this.remainder = this.numerator % this.denominator;
+        }
 
-    execute() {
-        this.quotient = Math.floor(this.numerator / this.denominator);
-        this.remainder = this.numerator % this.denominator;
+    }
+    export class Division {
+        numerator:number;
+        denominator:number;
+        quotient:number;
+        remainder:number;
+
+        constructor() {
+            this.numerator = 0;
+            this.denominator = 1;
+        }
+
+        execute() {
+            this.quotient = Math.floor(this.numerator / this.denominator);
+            this.remainder = this.numerator % this.denominator;
+        }
+
     }
 
-}
-class Division {
-    numerator: number;
-    denominator: number;
-    quotient: number;
-    remainder: number;
-    constructor() {
-        this.numerator = 0;
-        this.denominator = 1;
-    }
-    execute() {
-        this.quotient = Math.floor(this.numerator / this.denominator);
-        this.remainder = this.numerator % this.denominator;
-    }
 
-}
+    export class Addition {
+        a:number;
+        b:number;
 
+        first(a:number) {
+            this.a = a;
+        }
 
-class Addition {
-    a: number;
-    b: number;
-    first(a:number) {
-        this.a = a;
-    }
-    second(b:number) {
-        this.b = b;
-    }
-    sum(): number{
-        return Number(this.a) + Number(this.b);
-    }
-}
+        second(b:number) {
+            this.b = b;
+        }
 
-class PeopleOver {
-    queryParam: number;
-    query(queryParam: number) {
-        this.queryParam = queryParam;
-        return [
-            {
-                "name": "Jane Poe",
-                "age": 22,
-                "sex": 'F'
-            },
-            {
-                "name": "John Doe",
-                "age": 23,
-                "sex": 'M'
-            }
-        ]
-    }
-}
-
-class PeopleUnder {
-
-}
-
-class Counter {
-    count: number;
-
-    constructor(startingPoint: number) {
-        this.count = Number(startingPoint);
+        sum():number {
+            return Number(this.a) + Number(this.b);
+        }
     }
 
-    incrementCountByOne(): string {
-        this.count += 1;
-        return "The count is " + this.count;
+    export class PeopleOver {
+        queryParam:number;
+
+        query(queryParam:number) {
+            this.queryParam = queryParam;
+            return [
+                {
+                    "name": "Jane Poe",
+                    "age": 22,
+                    "sex": 'F'
+                },
+                {
+                    "name": "John Doe",
+                    "age": 23,
+                    "sex": 'M'
+                }
+            ]
+        }
     }
 
-    incrementBy(by: number): string {
-        this.count += Number(by);
-        return "The count is " + this.count;
+    export class PeopleUnder {
+
+    }
+
+    export class Counter {
+        count:number;
+
+        constructor(startingPoint:number) {
+            this.count = Number(startingPoint);
+        }
+
+        incrementCountByOne():string {
+            this.count += 1;
+            return "The count is " + this.count;
+        }
+
+        incrementBy(by:number):string {
+            this.count += Number(by);
+            return "The count is " + this.count;
+        }
     }
 }
