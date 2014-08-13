@@ -10,7 +10,7 @@ class FitController{
 
     constructor(){
         this.pageContents = fitUtils.wikiData([
-            "This will map to a class called ShouldIBuyMilk. Each row in the table is a test.",
+            "This will map to a class called ShouldIBuyChaas. Each row in the table is a test.",
             "",
             "|should I buy chaas|",
             "|cash in wallet|credit card|pints of chaas remaining|go to store?|",
