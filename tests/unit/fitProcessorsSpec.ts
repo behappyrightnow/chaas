@@ -212,12 +212,13 @@ describe('FitProcessors', function () {
     });
     describe("Script Processor", function() {
         var fitUtils = new FitUtils();
-            var wikiElements:Array<WikiElement> =
-                fitUtils.wikiData([
-                    "|script|counter|10|",
-                    "|show|increment count by one|11|",
-                    "|Jane Poe|22|F|"
-                ]);
+        var wikiElements:Array<WikiElement> =
+            fitUtils.wikiData([
+                "|script|counter|10|",
+                "|show|increment count by one|11|",
+                "|increment|by|2|",
+                "|check|count|13|"
+            ]);
             tableElement = wikiElements[0];
             queryProcessor = new QueryProcessor(tableElement);
             objectUnderTest = new window["PeopleOver"];
@@ -275,19 +276,23 @@ class PeopleUnder {
 }
 
 class Counter {
-    count: number;
+    currentCount: number;
 
     constructor(startingPoint: number) {
-        this.count = Number(startingPoint);
+        this.currentCount = Number(startingPoint);
     }
 
     incrementCountByOne(): string {
-        this.count += 1;
-        return "The count is " + this.count;
+        this.currentCount += 1;
+        return "The count is " + this.currentCount;
     }
 
     incrementBy(by: number): string {
-        this.count += Number(by);
-        return "The count is " + this.count;
+        this.currentCount += Number(by);
+        return "The count is " + this.currentCount;
+    }
+
+    count(): number {
+        return this.currentCount;
     }
 }
