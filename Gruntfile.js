@@ -80,7 +80,7 @@ module.exports = function(grunt) {
         port: 8000
         */
         options: {
-          base: [ 'src/', 'examples/', 'bower_components/']
+          base: [ 'src/', 'bower_components/', 'examples/' ],
         }
       }
     }
