@@ -352,7 +352,7 @@ class ScriptProcessor extends Processor {
             if (objectUnderTest[method.methodName] !== undefined) {
                 var result = null;
                 if (typeof objectUnderTest[method.methodName] === "function") {
-                    result = objectUnderTest[method.methodName].apply(this, argsArray);
+                    result = objectUnderTest[method.methodName].apply(objectUnderTest, argsArray);
                 } else {
                     result = objectUnderTest[method.methodName];
                 }

@@ -225,8 +225,8 @@ describe('FitProcessors', function () {
             var wikiElements = fitUtils.wikiData([
                 "|script|counter|10|",
                 "|check|count|10|",
+                "|increment by|2|",
                 "|show|increment count by one|11|",
-                "|increment|by|2|",
                 "|check|count|13|"
             ]);
             tableElement = wikiElements[0];
@@ -243,11 +243,17 @@ describe('FitProcessors', function () {
             expect(firstRow[2].status).toBe("PASSED");
             expect(objectUnderTest.count).toBe(10);
         })
-        it("should run row test correctly", function() {
+        it("should run check correctly", function() {
             var row = tableElement.rows[1];
             var objectUnderTest = scriptProcessor.callConstructor(classToInit, ["10"], tableElement.rows[0]);
             scriptProcessor.processRow(row, ["check"], objectUnderTest);
             expect(row[2].status).toBe("PASSED");
+        });
+        it("should call increment correctly", function() {
+            var row = tableElement.rows[2];
+            var objectUnderTest = scriptProcessor.callConstructor(classToInit, ["10"], tableElement.rows[0]);
+            scriptProcessor.processRow(row, ["check"], objectUnderTest);
+            expect(row[0].status).toBe("PASSED");
         });
     });
 });
@@ -333,12 +339,12 @@ module testClasses {
 
         incrementCountByOne():string {
             this.count += 1;
-            return "The count is " + this.count;
+            return true;
         }
 
         incrementBy(by:number):string {
             this.count += Number(by);
-            return "The count is " + this.count;
+            return true;
         }
     }
 }
