@@ -401,8 +401,8 @@ class ScriptProcessor extends Processor {
         var results = this.methodFromRow(row.slice(1));
         var method = results.method;
         var argsArray = results.argsArray;
-        if (objectUnderTest.prototype[method.methodName] !== undefined) {
-            var result = objectUnderTest.prototype[method.methodName].apply(this, argsArray);
+        if (objectUnderTest[method.methodName] !== undefined) {
+            var result = objectUnderTest[method.methodName].apply(objectUnderTest, argsArray);
             var cell = new CellWikiElement(result + "");
             cell.status = "SHOW";
             console.log(result);

@@ -255,6 +255,12 @@ describe('FitProcessors', function () {
             scriptProcessor.processRow(row, ["check"], objectUnderTest);
             expect(row[0].status).toBe("PASSED");
         });
+        it("should show result in table", function() {
+            var row = tableElement.rows[3];
+            var objectUnderTest = scriptProcessor.callConstructor(classToInit, ["10"], tableElement.rows[0]);
+            scriptProcessor.processRow(row, ["show"], objectUnderTest);
+            expect(row[2].cellEntry).toBe('11');
+        });
     });
 });
 module testClasses {
@@ -339,7 +345,7 @@ module testClasses {
 
         incrementCountByOne():string {
             this.count += 1;
-            return true;
+            return this.count;
         }
 
         incrementBy(by:number):string {
