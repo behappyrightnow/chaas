@@ -288,7 +288,17 @@ class ScriptProcessor extends Processor {
 
     callConstructor(classToInit, args, firstRow) {
         try {
-            var objectUnderTest = applyConstruct(window[classToInit], args);
+            var classType = null;
+            if (classToInit.indexOf(".") !== -1) {
+                var pieces = classToInit.split(".");
+                classType = window[pieces[0]];
+                for (var i=1;i<pieces.length;i++) {
+                    classType = classType[pieces[i]];
+                }
+            } else {
+                classType = window[classToInit];
+            }
+            var objectUnderTest = applyConstruct(classType, args);
             console.log(firstRow, firstRow.length);
             for (var j = 2; j < firstRow.length; j++) {
                 firstRow[j].status = "PASSED";

@@ -237,11 +237,14 @@ describe('FitProcessors', function () {
             expect(scriptProcessor).not.toBeNull();
         });
         it("should call constructor correctly", function() {
-           /* var firstRow = tableElement.rows[0];
+            var firstRow = tableElement.rows[0];
             var objectUnderTest = scriptProcessor.callConstructor(classToInit, ["10"], firstRow);
-            expect(firstRow[2].status).toBe("PASSED");*/
+            expect(firstRow[2].status).toBe("PASSED");
+            expect(objectUnderTest.count).toBe(10);
         })
+        it("should run row test correctly", function() {
 
+        });
     });
 });
 module testClasses {
