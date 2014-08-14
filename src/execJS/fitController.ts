@@ -13,10 +13,10 @@ class FitController{
     }
     loadData($http) {
          var that = this;
-         $http({method: 'GET', url: '/stories/index.txt'}).
+         $http({method: 'GET', url: '/stories/HomePage'}).
             success(function(data, status, headers, config) {
                  var lines = data.split("\n");
-                 that.pageContents = fitUtils.wikiData(lines);
+                 that.pageContents = fitUtils.wikiData(lines, $http);
             }).
             error(function(data, status, headers, config) {
               console.log("error!");

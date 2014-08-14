@@ -27,7 +27,14 @@
                 <span ng-if="element.type==='DEFAULT'">
                     <span ng-repeat="content in element.contents">
                         <span ng-if="content.type==='TEXT'">{{content.text}}</span>
-                        <span ng-if="content.type==='LINK'"><a href="{{content.url}}">{{content.text}}</a></span>
+                        <span ng-if="content.type==='LINK'">
+                            <span ng-if="content.exists===true">
+                                <a href="{{content.url}}">{{content.text}}</a>
+                            </span>
+                            <span ng-if="content.exists===false">
+                                {{content.text}}<a href="{{content.url}}">?</a>
+                            </span>
+                        </span>
                     </span>
 
                 </span>

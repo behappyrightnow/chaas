@@ -24,7 +24,7 @@ class FitUtils {
         return answer;
     }
 
-    wikiData(lines:Array<string>):Array<WikiElement> {
+    wikiData(lines:Array<string>, $http):Array<WikiElement> {
         var tableFound:boolean = false;
         var tableElement:TableWikiElement;
         var answer: Array<WikiElement> = new Array();
@@ -35,7 +35,7 @@ class FitUtils {
                     tableElement = new TableWikiElement();
                     tableElement.addRow(line);
                 } else {
-                    answer.push(new DefaultElement(line));
+                    answer.push(new DefaultElement(line, $http));
                 }
             } else if (tableFound) {
                 if (line.charAt(0) !== '|') {
@@ -62,18 +62,19 @@ interface WikiElement {
 class DefaultElement implements WikiElement {
     contents: Array<BasicElement>;
     type: string;
-    constructor(line:string) {
+
+    constructor(line:string, $http) {
         this.contents = new Array<any>();
         this.type = "DEFAULT";
-        this.process(line);
+        this.process(line, $http);
     }
-    process(line:string) {
+    process(line:string, $http) {
         var state = new WikiState.MinusOne("","");
         var accumulation = new Array<WikiState.State>();
         state.transition(accumulation, line, 0);
         for (var i = 0; i < accumulation.length;i++) {
             console.log("["+accumulation[i].text+"]");
-            this.contents.push(accumulation[i].createAtomicElement());
+            this.contents.push(accumulation[i].createAtomicElement($http));
         }
     }
 }
@@ -108,7 +109,7 @@ module WikiState {
         nextState(contents: Array<State>,character:string):State {
             throw "Can't call directly";
         }
-        createAtomicElement():BasicElement {
+        createAtomicElement($http):BasicElement {
             throw "Can't call directly";
         }
     }
@@ -123,7 +124,7 @@ module WikiState {
         endInputTransition(contents:Array<State>) {
             contents.push(this);
         }
-        createAtomicElement() {
+        createAtomicElement($http) {
             return new TextElement(this.text);
         }
     }
@@ -177,8 +178,8 @@ module WikiState {
         endInputTransition(contents:Array<State>){
 
         }
-        createAtomicElement() {
-            return new LinkElement(this.text);
+        createAtomicElement($http) {
+            return new LinkElement(this.text, $http);
         }
     }
 }
@@ -197,10 +198,22 @@ class LinkElement implements BasicElement{
     url: string;
     text: string;
     type: string;
-    constructor(text:string) {
+    exists: boolean;
+    constructor(text:string, $http) {
         this.text = text;
         this.url = "/"+text;
         this.type = "LINK";
+        this.exists = false;
+        var that = this;
+
+        $http({method: 'GET', url: '/stories'+this.url}).
+            success(function(data, status, headers, config) {
+                 that.exists = true;
+            }).
+            error(function(data, status, headers, config) {
+              that.exists = false;
+            });
+
     }
 }
 

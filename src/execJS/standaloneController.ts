@@ -33,6 +33,20 @@ class StandaloneController extends FitController {
             "|ensure|login with username|Bob|and password|xyzzy|",
             "|note|this is a comment|",
             "|show|number of login attempts|"
-        ]);
+        ], mockHttp);
+    }
+}
+
+function mockHttp(someData) {
+    console.log("In mock http");
+    return {
+        success: function(fn) {
+            console.log("Success");
+            return mockHttp(someData);
+        },
+        error: function(fn) {
+            console.log("Error");
+            return mockHttp(someData);
+        }
     }
 }
