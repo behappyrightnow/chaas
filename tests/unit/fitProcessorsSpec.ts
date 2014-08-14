@@ -226,7 +226,7 @@ describe('FitProcessors', function () {
                 "|script|counter|10|",
                 "|check|count|10|",
                 "|increment by|2|",
-                "|show|increment count by one|11|",
+                "|show|increment count by one|",
                 "|check|count|13|"
             ]);
             tableElement = wikiElements[0];
@@ -260,6 +260,7 @@ describe('FitProcessors', function () {
             var objectUnderTest = scriptProcessor.callConstructor(classToInit, ["10"], tableElement.rows[0]);
             scriptProcessor.processRow(row, ["show"], objectUnderTest);
             expect(row[2].cellEntry).toBe('11');
+            expect(row[2].status).toBe("SHOW");
         });
     });
 });
