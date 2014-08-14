@@ -38,14 +38,11 @@ class StandaloneController extends FitController {
 }
 
 function mockHttp(someData) {
-    console.log("In mock http");
     return {
         success: function(fn) {
-            console.log("Success");
             return mockHttp(someData);
         },
         error: function(fn) {
-            console.log("Error");
             return mockHttp(someData);
         }
     }

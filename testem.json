@@ -5,6 +5,8 @@
     "bower_components/underscore/underscore.js",
     "src/execJS/FitUtils.js",
     "src/execJS/FitProcessors.js",
+    "src/execJS/fitController.js",
+    "src/execJS/standaloneController.js",
     "tests/unit/fitUtilsSpec.js",
     "tests/unit/fitProcessorsSpec.js"
   ]

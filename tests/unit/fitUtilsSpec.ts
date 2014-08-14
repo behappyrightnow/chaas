@@ -79,7 +79,7 @@ describe('FitUtils', function () {
     describe("Default Wiki Element", function() {
         var defaultWikiElement: DefaultElement;
         beforeEach(function() {
-            defaultWikiElement = new DefaultElement("Hello, I have a CamelCase link here.");
+            defaultWikiElement = new DefaultElement("Hello, I have a CamelCase link here.", mockHttp);
         });
         it("type is default", function() {
             expect(defaultWikiElement.type).toBe("DEFAULT");
@@ -96,7 +96,7 @@ describe('FitUtils', function () {
             expect(contents[2].type).toBe("TEXT");
         });
         it("should deal with blank lines", function() {
-            defaultWikiElement = new DefaultElement("");
+            defaultWikiElement = new DefaultElement("", mockHttp);
             var contents = defaultWikiElement.contents;
             expect(contents.length).toBe(1);
             expect(contents[0].text).toBe("");

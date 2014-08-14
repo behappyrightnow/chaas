@@ -73,7 +73,6 @@ class DefaultElement implements WikiElement {
         var accumulation = new Array<WikiState.State>();
         state.transition(accumulation, line, 0);
         for (var i = 0; i < accumulation.length;i++) {
-            console.log("["+accumulation[i].text+"]");
             this.contents.push(accumulation[i].createAtomicElement($http));
         }
     }
