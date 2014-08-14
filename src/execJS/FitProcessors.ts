@@ -349,8 +349,14 @@ class ScriptProcessor extends Processor {
             var argsArray = results.argsArray;
             var method = results.method;
 
-            if (objectUnderTest.prototype[method.methodName] !== undefined) {
-                var result = objectUnderTest.prototype[method.methodName].apply(this, argsArray);
+            if (objectUnderTest[method.methodName] !== undefined) {
+                var result = null;
+                if (typeof objectUnderTest[method.methodName] === "function") {
+                    result = objectUnderTest[method.methodName].apply(this, argsArray);
+                } else {
+                    result = objectUnderTest[method.methodName];
+                }
+
                 var compareResult = inverse? (result != valueToCompare) : (result == valueToCompare);
                 if (compareResult) {
                     this.methodPassed(resultingCell, method);

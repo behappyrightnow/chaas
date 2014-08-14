@@ -224,12 +224,13 @@ describe('FitProcessors', function () {
         beforeEach(function () {
             var wikiElements = fitUtils.wikiData([
                 "|script|counter|10|",
+                "|check|count|10|",
                 "|show|increment count by one|11|",
                 "|increment|by|2|",
                 "|check|count|13|"
             ]);
             tableElement = wikiElements[0];
-            scriptProcessor = new ScriptProcessor(tableElement);
+            scriptProcessor = new ScriptProcessor(fitUtils);
             classToInit = "testClasses.Counter";
         });
         it("should not be undefined", function() {
@@ -243,7 +244,10 @@ describe('FitProcessors', function () {
             expect(objectUnderTest.count).toBe(10);
         })
         it("should run row test correctly", function() {
-
+            var row = tableElement.rows[1];
+            var objectUnderTest = scriptProcessor.callConstructor(classToInit, ["10"], tableElement.rows[0]);
+            scriptProcessor.processRow(row, ["check"], objectUnderTest);
+            expect(row[2].status).toBe("PASSED");
         });
     });
 });
