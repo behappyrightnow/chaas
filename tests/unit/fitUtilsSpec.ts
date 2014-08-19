@@ -90,7 +90,7 @@ describe('FitUtils', function () {
             expect(contents[0].text).toBe("Hello, I have a ");
             expect(contents[0].type).toBe("TEXT");
             expect(contents[1].text).toBe("CamelCase");
-            expect(contents[1].url).toBe("/CamelCase");
+            expect(contents[1].url()).toBe("#/CamelCase");
             expect(contents[1].type).toBe("LINK");
             expect(contents[2].text).toBe(" link here.");
             expect(contents[2].type).toBe("TEXT");
