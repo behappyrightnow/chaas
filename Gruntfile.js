@@ -57,6 +57,19 @@ module.exports = function(grunt) {
         src: ['lib/**/*.js', 'test/**/*.js']
       }
     },
+    typescript: {
+      app: {
+        src: ['src/app/**/*.ts'],
+        dest: 'src/app/',
+        options: {
+          noResolve: true,
+          ignoreError: true, // FIXME: Don't just ignore me!
+        },
+      },
+      examples: {
+        src: ['examples/**/*.ts'],
+      }
+    },
     watch: {
       gruntfile: {
         files: '<%= jshint.gruntfile.src %>',
@@ -94,6 +107,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-typescript');
 
   // Default task.
   grunt.registerTask('default', ['jshint', /*'concat', 'uglify' */]);

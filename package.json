@@ -15,6 +15,7 @@
     "exit": "^0.1.2",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-watch": "^0.6.1",
+    "grunt-typescript": "^0.3.8",
     "iconv-lite": "^0.4.4",
     "js-yaml": "^3.1.0",
     "lodash": "^2.4.1"
