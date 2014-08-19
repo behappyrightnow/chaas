@@ -1,8 +1,5 @@
 // <reference path="../app.ts">
 // (function(){
-    angular.module('fitWiki')
-        .controller('FitController', FitController);
-
     class FitController {
         pageContents:Array<WikiElement>;
 
@@ -46,4 +43,8 @@
             }
         }
     } // END FitController
+
+    angular.module('fitWiki')
+        .controller('FitController', FitController);
+
 // })();
