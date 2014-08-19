@@ -194,25 +194,18 @@ class TextElement implements BasicElement {
     }
 }
 class LinkElement implements BasicElement{
-    url: string;
     text: string;
     type: string;
     exists: boolean;
     constructor(text:string, $http) {
         this.text = text;
-        this.url = "/"+text;
+
         this.type = "LINK";
-        this.exists = false;
         var that = this;
+    }
 
-        $http({method: 'GET', url: '/stories'+this.url}).
-            success(function(data, status, headers, config) {
-                 that.exists = true;
-            }).
-            error(function(data, status, headers, config) {
-              that.exists = false;
-            });
-
+    url(){
+      return '#/' + this.text;
     }
 }
 
