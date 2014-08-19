@@ -58,9 +58,9 @@ module.exports = function(grunt) {
       }
     },
     typescript: {
-      app: {
-        src: ['src/app/**/*.ts'],
-        dest: 'src/app/',
+      lib: {
+        src: ['src/**/*.ts'],
+        dest: 'src/',
         options: {
           noResolve: true,
           ignoreError: true, // FIXME: Don't just ignore me!
@@ -79,8 +79,13 @@ module.exports = function(grunt) {
         files: '<%= jshint.lib_test.src %>',
         tasks: ['jshint:lib_test']
       },
+      lib: {
+        files: ['src/**/*.ts'],
+        tasks: ['typescript:lib'],
+      },
       examples: {
         files: ['examples/**/*.*'],
+        tasks: ['typescript:examples'],
         options: {
           livereload: true
         }
