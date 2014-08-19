@@ -57,6 +57,19 @@ module.exports = function(grunt) {
         src: ['lib/**/*.js', 'test/**/*.js']
       }
     },
+    typescript: {
+      lib: {
+        src: ['src/**/*.ts'],
+        dest: 'src/',
+        options: {
+          noResolve: true,
+          ignoreError: true, // FIXME: Don't just ignore me!
+        },
+      },
+      examples: {
+        src: ['examples/**/*.ts'],
+      }
+    },
     watch: {
       gruntfile: {
         files: '<%= jshint.gruntfile.src %>',
@@ -66,8 +79,13 @@ module.exports = function(grunt) {
         files: '<%= jshint.lib_test.src %>',
         tasks: ['jshint:lib_test']
       },
+      lib: {
+        files: ['src/**/*.ts'],
+        tasks: ['typescript:lib'],
+      },
       examples: {
         files: ['examples/**/*.*'],
+        tasks: ['typescript:examples'],
         options: {
           livereload: true
         }
@@ -80,7 +98,7 @@ module.exports = function(grunt) {
         port: 8000
         */
         options: {
-          base: [ 'src/', 'examples/', 'bower_components/']
+          base: [ 'src/', 'bower_components/', 'examples/' ],
         }
       }
     }
@@ -94,6 +112,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-typescript');
 
   // Default task.
   grunt.registerTask('default', ['jshint', /*'concat', 'uglify' */]);
