@@ -9,6 +9,9 @@
             </span>
 
         </span>
+        <p ng-if="element.type === 'TABLE'">
+          <button ng-click="fit.runFitTestsOnPage()" class="btn btn-primary">Run Tests</button>
+        </p>
         <table class="table table-bordered table-condensed" ng-if="element.type==='TABLE'">
             <tr ng-repeat="row in element.rows track by $index">
                 <td
