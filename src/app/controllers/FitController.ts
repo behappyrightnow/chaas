@@ -20,8 +20,10 @@
         }
         runFitTestsOnPage() {
             console.log("Running fit tests");
-            var tables = _.filter(this.pageContents, function(element) { return element.type === 'TABLE';});
-            _.each(tables, (table:TableWikiElement) => {this.process(table)});
+            var tables = _.filter(this.pageContents, function(element) {
+                return element.type === 'TABLE';
+            });
+            _.each(tables, (table:TableWikiElement) => { this.process(table) });
         }
 
         process(tableEl:TableWikiElement) {
