@@ -60,7 +60,6 @@ module.exports = function(grunt) {
     typescript: {
       lib: {
         src: ['src/**/*.ts'],
-        dest: 'src/',
         options: {
           noResolve: true,
           ignoreError: true, // FIXME: Don't just ignore me!
