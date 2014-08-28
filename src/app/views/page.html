@@ -1,6 +1,4 @@
 <div class="panel panel-default">
-    <script ng-repeat="filename in fit.fixtures"
-      ng-attr-src="{{fit.fixture(filename)}}"></script>
     <span ng-repeat="element in fit.pageContents">
         <span ng-if="element.type==='DEFAULT'">
             <span ng-repeat="content in element.contents">
