@@ -4,32 +4,8 @@
         config:any;
         pageContents:Array<WikiElement>;
 
-        constructor($http, $routeParams){
+        constructor($http, $routeParams, CONFIG){
            this.loadData($http, $routeParams.page);
-
-           this.loadConfig($http).then(()=>{
-               this.loadFixtures($http);
-           })
-        }
-
-        loadConfig($http){
-            return $http.get('/chaas.json').success((data)=>{
-                this.config = data;
-                console.log(this.config);
-            });
-        }
-
-        loadFixtures($http){
-            return $http.get(this.config.fixtures[0]).success((listing)=>{
-                listing = listing.split('\n'); // FIXME: This should be JSON, not a string...
-                this.fixtures  = _.filter(listing, function(filename){
-                    return /.js$/.test(filename);
-                })
-            });
-        }
-
-        fixture(filename){
-            return this.config.fixtures[0] + '/' + filename;
         }
 
         loadData($http, page) {
