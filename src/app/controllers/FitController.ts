@@ -3,13 +3,14 @@
     class FitController {
         config:any;
         pageContents:Array<WikiElement>;
-
+        pageTitle: string;
         constructor($http, $routeParams, CONFIG){
            this.loadData($http, $routeParams.page);
         }
 
         loadData($http, page) {
             console.log(page);
+            this.pageTitle = page;
              var that = this;
              $http({method: 'GET', url: '/stories/' + page }).
                 success(function(data, status, headers, config) {
