@@ -1,4 +1,4 @@
-<b class="pageTitle">{{fit.pageTitle}}</b>
+<a ng-href="/#/HomePage"><img src="/chaas.png" class="logo"></a>&nbsp;&nbsp;<b class="pageTitle">{{fit.pageTitle}}</b>
 <i
     class="fa fa-pencil-square-o fa-3x pull-right"
     ng-click="fit.editPage()"
@@ -48,7 +48,7 @@
     </div>
 </div>
 <div ng-if="fit.editMode === true">
-    <textarea class="form-control" ng-model="fit.rawText" rows="20"></textarea>
+    <textarea class="form-control editBox" ng-model="fit.rawText" rows="20"></textarea>
     <br/>
     <button class="btn btn-primary" ng-click="fit.savePage()">Save</button>
 </div>

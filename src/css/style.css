@@ -17,3 +17,13 @@
 .pageTitle {
     font-size: 250%;
 }
+
+.editBox {
+    font-family: "Courier New";
+    font-size: 150%;
+}
+.logo {
+    width: 30;
+    height: 34;
+    margin-bottom: 20px;
+}
