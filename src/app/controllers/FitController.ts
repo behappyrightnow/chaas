@@ -65,6 +65,27 @@
             this.pageContents = fitUtils.wikiData(lines, this.$http);
             this.editMode = false;
         }
+
+        pasteContent(event) {
+            var pasteProcessor: PasteProcessor = new PasteProcessor(event);
+            pasteProcessor.process();
+            if (pasteProcessor.rows !== undefined && pasteProcessor.rows.length>0) {
+                this.rawText += "\n";
+            }
+            for (var i=0;i<pasteProcessor.rows.length;i++) {
+                var row = pasteProcessor.rows[i];
+                var line = "|";
+                for (var j=0;j<row.length && row[j]!=="";j++) {
+                    line += row[j];
+                    if (j>=0 && j<row.length) {
+                        line += "|";
+                    }
+                }
+                this.rawText += line+"\n";
+            }
+            this.savePage();
+            console.log("Pasted ", pasteProcessor.rows);
+        }
     } // END FitController
 
     angular.module('fitWiki')

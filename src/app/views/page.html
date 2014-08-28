@@ -4,7 +4,7 @@
     ng-click="fit.editPage()"
     ng-if="fit.editMode === false">
 </i>
-<div ng-if="fit.editMode === false" >
+<div ng-if="fit.editMode === false" ng-paste="fit.pasteContent($event)">
     <span ng-repeat="element in fit.pageContents">
         <span ng-if="element.type==='DEFAULT'">
             <span ng-repeat="content in element.contents">
