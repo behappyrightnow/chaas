@@ -48,5 +48,7 @@ class FitController{
         }
     }
 
-
+    editPage() {
+        alert("Editing "+this.pageTitle);
+    }
 }
