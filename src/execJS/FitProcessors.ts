@@ -5,13 +5,19 @@ class Processor {
         this.fitUtils = fitUtils;
     }
     initializeClass(classToInit, classCell:CellWikiElement):any {
-        var objectUnderTest = new window[classToInit]();
-        if (objectUnderTest === undefined) {
-            //var msg =
-            classCell.status = "FAILED";
-            classCell.msg = "Class '" + classToInit + "' not found. Please include src file '" + classToInit + ".js' and make sure it contains a class called " + classToInit + ".";
-        } else {
+        var objectUnderTest = undefined;
+        try {
+            var objectUnderTest = new window[classToInit]();
             classCell.status = "PASSED";
+        }
+        catch (e){
+            if (objectUnderTest === undefined) {
+                //var msg =
+                classCell.status = "FAILED";
+                classCell.msg = "Class '" + classToInit + "' not found. Please include src file '" + classToInit + ".js' and make sure it contains a class called " + classToInit + ".";
+            } else {
+                classCell.status = "PASSED";
+            }
         }
         return objectUnderTest;
     }
@@ -48,7 +54,7 @@ class DecisionProcessor extends Processor {
             methods.push(method);
             if (objectUnderTest[method.methodName] === undefined) {
                 cell.status = "FAILED";
-                cell.msg = classToInit+": No input method called '"+method.methodName+"'. Either initialize in constructor or provide a function with this name."
+                cell.msg = classToInit+": No method called '"+method.methodName+"'. Either initialize in constructor or provide a function with this name."
             } else {
                 cell.status = "PASSED";
             }
