@@ -1,9 +1,22 @@
+<!doctype html>
 <html>
 <head>
     <title>Example of executable documentation</title>
     <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="/Font-Awesome/css/font-awesome.css" />
     <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body ng-app="fitWiki">
+    <div class="col-md-12" ng-view>
+        <p class="text-center">
+            <span class="fa fa-3x fa-spin fa-spinner"></span>
+        </p>
+    </div>
+    <chaas-fixture></chaas-fixture>
+    &nbsp;
+    <hr/>
+    &nbsp;&nbsp;<i><a href="https://github.com/behappyrightnow/chaas">Chaas 1.0</a></i>
+
     <script src="/jquery/dist/jquery.js"></script>
     <script src="/angular/angular.js"></script>
     <script src="/angular-route/angular-route.js"></script>
@@ -15,13 +28,5 @@
     <script src="/app/services/CONFIG.js"></script>
     <script src="/app/controllers/FitController.js"></script>
     <script src="/app/directives/chaas-fixture.js"></script>
-
-</head>
-<body ng-app="fitWiki">
-    <div class="col-md-12" ng-view></div>
-    <chaas-fixture></chaas-fixture>
-    &nbsp;
-    <hr/>
-    &nbsp;&nbsp;<i><a href="https://github.com/behappyrightnow/chaas">Chaas 1.0</a></i>
 </body>
 </html>
