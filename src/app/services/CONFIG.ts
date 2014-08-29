@@ -9,6 +9,12 @@
         deferred.resolve();
       });
 
-      return deferred.promise;
+      return angular.extend(deferred.promise, {
+        path: function(){
+          return _.reduce(arguments, function(memo, part){
+              return memo.replace(/\/$/, '') + '/' + part;
+          });
+        }
+      });
     } ]);
 })();
