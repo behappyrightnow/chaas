@@ -1,24 +1,34 @@
 // <reference path="../app.ts">
 // (function(){
     class FitController {
-        config:any;
+        config: any;
+
         pageContents:Array<WikiElement>;
+
         pageTitle: string;
+
         editMode: boolean;
+
         rawText: string;
+
         $http: any;
+
         constructor($http, $routeParams, CONFIG){
-            this.loadData($http, $routeParams.page);
+            CONFIG.then(()=>{
+                this.config = CONFIG;
+
+                this.loadData($http, $routeParams.page);
+            });
+
             this.editMode = false;
             this.rawText = "";
             this.$http = $http;
         }
 
         loadData($http, page) {
-            console.log(page);
             this.pageTitle = page;
              var that = this;
-             $http({method: 'GET', url: '/stories/' + page }).
+             $http({method: 'GET', url: this.config.path(this.config.wiki, page) }).
                 success(function(data, status, headers, config) {
                      that.rawText = data;
                      var lines = data.split("\n");

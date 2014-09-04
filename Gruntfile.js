@@ -57,13 +57,29 @@ module.exports = function(grunt) {
         src: ['lib/**/*.js', 'test/**/*.js']
       }
     },
+    testem: {
+      lib_tests: {
+        src: [
+          "bower_components/angular/angular.js",
+          "bower_components/angular-route/angular-route.js",
+          "bower_components/angular-mocks/angular-mocks.js",
+          "bower_components/underscore/underscore.js",
+          "src/app/app.js",
+          "src/app/services/CONFIG.js",
+          "tests/unit/CONFIGSpec.js"
+        ]
+      }
+    },
     typescript: {
+      options: {
+        noResolve: true,
+        ignoreError: true, // FIXME: Don't just ignore me!
+      },
       lib: {
         src: ['src/**/*.ts'],
-        options: {
-          noResolve: true,
-          ignoreError: true, // FIXME: Don't just ignore me!
-        },
+      },
+      lib_tests: {
+        src: ['tests/**/*.ts'],
       },
       examples: {
         src: ['examples/**/*.ts'],
@@ -111,11 +127,14 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-testem');
   grunt.loadNpmTasks('grunt-typescript');
 
   // Default task.
   grunt.registerTask('default', ['jshint', /*'concat', 'uglify' */]);
 
   grunt.registerTask('serve', ['connect:examples', 'watch']);
+
+  grunt.registerTask('test', ['typescript', 'testem:run:lib_tests']);
 
 };
