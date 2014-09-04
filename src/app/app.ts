@@ -1,5 +1,5 @@
 // (function(){
-  angular.module('fitWiki', [ 'ngRoute' ])
+  angular.module('chaas', [ 'ngRoute' ])
     .config([ '$routeProvider', function($routeProvider){
         $routeProvider
             .when('/:page', {

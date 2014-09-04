@@ -1,5 +1,5 @@
 (function(){
-  angular.module('fitWiki')
+  angular.module('chaas')
     .directive('chaasFixture', function chaasFixtureDirective(){
       return {
         restrict: 'E',

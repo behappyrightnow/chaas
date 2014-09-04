@@ -1,5 +1,5 @@
 (function(){
-  angular.module('fitWiki')
+  angular.module('chaas')
     .factory('CONFIG', [ '$q', '$http', function($q, $http){
       var deferred = $q.defer();
 

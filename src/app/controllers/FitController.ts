@@ -98,7 +98,7 @@
         }
     } // END FitController
 
-    angular.module('fitWiki')
+    angular.module('chaas')
         .controller('FitController', FitController);
 
 // })();
