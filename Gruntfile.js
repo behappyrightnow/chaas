@@ -11,16 +11,29 @@ module.exports = function(grunt) {
       '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
-    /** // Don't need these at the moment...
+    // /** // Don't need these at the moment...
     concat: {
       options: {
         banner: '<%= banner %>',
         stripBanners: true
       },
-      dist: {
-        src: ['lib/<%= pkg.name %>.js'],
+      dist_js: {
+        src: [
+            'src/execJS/*.js',
+            'src/app/**/*.js',
+        ],
         dest: 'dist/<%= pkg.name %>.js'
-      }
+      },
+      dist_html: {
+        src: ['src/app/index.html'],
+        dest: 'dist/<%= pkg.name %>.html',
+        options: { // FIXME: Turn off banners for HTML files...
+        }
+      },
+      dist_css: {
+        src: ['src/css/*.css'],
+        dest: 'dist/<%= pkg.name%>.css'
+      },
     },
     uglify: {
       options: {
@@ -96,7 +109,7 @@ module.exports = function(grunt) {
       },
       lib: {
         files: ['src/**/*.ts'],
-        tasks: ['typescript:lib'],
+        tasks: ['typescript:lib', 'concat:lib'],
       },
       examples: {
         files: ['examples/**/*.*'],
@@ -115,12 +128,17 @@ module.exports = function(grunt) {
         options: {
           base: [ 'src/', 'bower_components/', 'examples/' ],
         }
+      },
+      dist: {
+        options: {
+          base: [ 'dist/', 'bower_components/' ]
+        }
       }
     }
   });
 
   // These plugins provide necessary tasks.
-  /** // Unused at the moment...
+  // /** // Unused at the moment...
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   // **/
