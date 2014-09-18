@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+    <title>Example of executable documentation</title>
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="/Font-Awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="/chaas.css" />
+</head>
+<body ng-app="chaas">
+    <div class="col-md-12" ng-view>
+        <p class="text-center">
+            <span class="fa fa-3x fa-spin fa-spinner"></span>
+        </p>
+    </div>
+    <chaas-fixture></chaas-fixture>
+    &nbsp;
+    <hr/>
+    &nbsp;&nbsp;<i><a href="https://github.com/behappyrightnow/chaas">Chaas 1.0</a></i>
+
+    <script src="/jquery/dist/jquery.js"></script>
+    <script src="/angular/angular.js"></script>
+    <script src="/angular-route/angular-route.js"></script>
+    <script src="/underscore/underscore.js"></script>
+    <script src="/chaas.js"></script>
+    <script type="text/ng-template" id="/app/views/page.html">
+        <a ng-href="/#/HomePage"><img src="/chaas.png" class="logo"></a>&nbsp;&nbsp;<b class="pageTitle">{{fit.pageTitle}}</b>
+        <i class="fa fa-pencil-square-o fa-3x pull-right"
+            ng-click="fit.editPage()"
+            ng-if="fit.editMode === false">
+        </i>
+        <div ng-if="fit.editMode === false" ng-paste="fit.pasteContent($event)">
+            <span ng-repeat="element in fit.pageContents">
+                <span ng-if="element.type==='DEFAULT'">
+                    <span ng-repeat="content in element.contents">
+                        <span ng-if="content.type==='TEXT'">{{content.text}}</span>
+                        <span ng-if="content.type==='LINK'">
+                            <a ng-href="{{content.url()}}">{{content.text}}</a>
+                        </span>
+                    </span>
+
+                </span>
+                <p ng-if="element.type === 'TABLE'">
+                  <button ng-click="fit.runFitTestsOnPage()" class="btn btn-primary">Run Tests</button>
+                </p>
+                <table class="table table-bordered table-condensed" ng-if="element.type==='TABLE'">
+                    <tr ng-repeat="row in element.rows track by $index">
+                        <td
+                           ng-repeat="cell in row track by $index"
+                           ng-class="{greenCell: cell.status === 'PASSED', redCell: cell.status === 'FAILED', yellowCell: cell.status === 'IGNORED', blueCell: cell.status === 'SHOW'}"
+                           colspan="{{row.length<element.maxCols?($index===row.length-1?element.maxCols-row.length+1:1):1}}">
+                            {{cell.cellEntry}}
+                            <span ng-if="cell.status === 'FAILED' || cell.status === 'IGNORED'">
+                                <br/>&nbsp;<p/>
+                                <span ng-if="cell.msg !== null"><i>{{cell.msg}}</i></span>
+                                <span ng-if="cell.msg === null">
+                                    <span ng-if="cell.expected !== null && cell.expected !==''">
+                                        Expected: <i>{{cell.expected}}</i><br/>
+                                        But got: <i>{{cell.actual}}</i>
+                                    </span>
+                                    <span ng-if="cell.expected === null || cell.expected === ''">
+                                        <i>{{cell.actual}}</i>
+                                    </span>
+                                </span>
+                            </span>
+
+                        </td>
+                    </tr>
+                </table>
+
+                <br/>
+            </span>
+            </div>
+        </div>
+        <div ng-if="fit.editMode === true">
+            <textarea class="form-control editBox" ng-model="fit.rawText" rows="20"></textarea>
+            <br/>
+            <button class="btn btn-primary" ng-click="fit.savePage()">Save</button>
+        </div>
+    </script>
+</body>
+</html>
