@@ -5,11 +5,12 @@ module.exports = function(grunt) {
   grunt.initConfig({
     // Metadata.
     pkg: grunt.file.readJSON('package.json'),
-    banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
-      '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-      '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-      '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
-      ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
+    banner:'',
+      //'/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
+      //'<%= grunt.template.today("yyyy-mm-dd") %>\n' +
+      //'<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
+      //'* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
+      //' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
     // /** // Don't need these at the moment...
     concat: {
@@ -40,7 +41,7 @@ module.exports = function(grunt) {
         banner: '<%= banner %>'
       },
       dist: {
-        src: '<%= concat.dist.dest %>',
+        src: '<%= concat.dist_js.dest %>',
         dest: 'dist/<%= pkg.name %>.min.js'
       }
     },
@@ -131,7 +132,8 @@ module.exports = function(grunt) {
       },
       dist: {
         options: {
-          base: [ 'dist/', 'bower_components/' ]
+          base: [ 'dist/', 'bower_components/' ],
+          open: 'http://localhost:8000/chaas.html'
         }
       }
     }
@@ -149,10 +151,20 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-typescript');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', /*'concat', 'uglify' */]);
+  grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
 
   grunt.registerTask('serve', ['connect:examples', 'watch']);
 
   grunt.registerTask('test', ['typescript', 'testem:run:lib_tests']);
+
+  grunt.registerTask('chaas', function(){
+      var dirs = grunt.config.get('connect.dist.options.base');
+
+      dirs.push(grunt.option('path') || './');
+
+      grunt.config.set('connect.dist.options.base', dirs);
+
+      grunt.task.run('connect:dist:keepalive');
+  });
 
 };
