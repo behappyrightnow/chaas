@@ -5,12 +5,12 @@ module.exports = function(grunt) {
   grunt.initConfig({
     // Metadata.
     pkg: grunt.file.readJSON('package.json'),
-    banner:'',
-      //'/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
-      //'<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-      //'<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-      //'* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
-      //' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
+    banner: '' +
+      '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
+      '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
+      '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
+      '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
+      ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
     // /** // Don't need these at the moment...
     concat: {
@@ -29,6 +29,7 @@ module.exports = function(grunt) {
         src: ['src/app/index.html'],
         dest: 'dist/<%= pkg.name %>.html',
         options: { // FIXME: Turn off banners for HTML files...
+          banner: '<!-- <%= banner %> -->\n',
         }
       },
       dist_css: {
