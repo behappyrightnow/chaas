@@ -64,6 +64,7 @@ module.exports = function(grunt) {
         boss: true,
         eqnull: true,
         browser: true,
+        node: true,
         globals: {
           jQuery: true
         }
@@ -131,6 +132,7 @@ module.exports = function(grunt) {
             if ( request.url !== '/page' || request.method !== 'POST' ){
               return next();
             }
+
             var name = request.body.name,
                 contents = request.body.contents || '';
 
