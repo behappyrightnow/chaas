@@ -35,10 +35,13 @@
     "url": "git://github.com/behappyrightnow/chaas.git"
   },
   "test": "testem",
-  "author": "",
+  "contributors": [
+      {"name": "Krishnan Srinivasan", "email": "krishnan.srinivasan@yale.edu"},
+      {"name": "Somik Raha", "email": "somik.raha@gmail.com"},
+      {"name": "Kai Wu", "email": "kwu@smartorg.com"},
+      {"name": "David Rogers", "email": "al.the.x@gmail.com"}
+  ],
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/behappyrightnow/chaas/issues"
-  },
+  "bugs": "https://github.com/behappyrightnow/chaas/issues",
   "homepage": "https://github.com/behappyrightnow/chaas"
 }
