@@ -14,7 +14,7 @@ class Processor {
             if (objectUnderTest === undefined) {
                 //var msg =
                 classCell.status = "FAILED";
-                classCell.msg = "Class '" + classToInit + "' not found. Please include src file '" + classToInit + ".js' and make sure it contains a class called " + classToInit + ".";
+                classCell.msg = "Class '" + classToInit + "' not found. Please include a src file (in the fixtures folder referenced by chaas.json) with a class called " + classToInit + ".";
             } else {
                 classCell.status = "PASSED";
             }
