@@ -13,7 +13,7 @@
 
         $http: any;
 
-        constructor($http, $routeParams, CONFIG){
+        constructor($http, $routeParams, CONFIG, transformRequestAsFormPost){
             CONFIG.then(()=>{
                 this.config = CONFIG;
 
@@ -23,11 +23,13 @@
             this.editMode = false;
             this.rawText = "";
             this.$http = $http;
+            this.transformRequestAsFormPost = transformRequestAsFormPost;
         }
 
         loadData($http, page) {
             this.pageTitle = page;
              var that = this;
+            console.log("Loading data from "+this.config.path(this.config.wiki, page));
              $http({method: 'GET', url: this.config.path(this.config.wiki, page) }).
                 success(function(data, status, headers, config) {
                      that.rawText = data;
@@ -74,6 +76,21 @@
             var lines = this.rawText.split("\n");
             this.pageContents = fitUtils.wikiData(lines, this.$http);
             this.editMode = false;
+            console.log(this.pageTitle);
+            console.log(this.rawText);
+            var that = this;
+            var data = {name: this.pageTitle, contents: this.rawText};
+            jQuery.post("/page", data).done(function(data) {
+                console.log("Done posting data");
+            });
+            /*this.$http({method:"POST",url:"/page",data:data}
+                ).
+                success(function(data, status, headers, config) {
+                   console.log("Saved successfully");
+                }).
+                error(function(data, status, headers, config) {
+                  console.log("Error! Could not save "+that.rawText);
+                });*/
         }
 
         pasteContent(event) {
@@ -102,3 +119,4 @@
         .controller('FitController', FitController);
 
 // })();
+
