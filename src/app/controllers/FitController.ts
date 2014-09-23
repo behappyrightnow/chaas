@@ -23,7 +23,6 @@
             this.editMode = false;
             this.rawText = "";
             this.$http = $http;
-            this.transformRequestAsFormPost = transformRequestAsFormPost;
         }
 
         loadData($http, page) {
