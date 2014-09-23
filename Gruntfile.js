@@ -1,16 +1,19 @@
 /*global module:false*/
+var bodyParser = require('body-parser');
+var fs = require('fs');
+
 module.exports = function(grunt) {
 
   // Project configuration.
   grunt.initConfig({
     // Metadata.
     pkg: grunt.file.readJSON('package.json'),
-    banner:'',
-      //'/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
-      //'<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-      //'<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-      //'* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
-      //' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
+    banner: '' +
+      '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
+      '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
+      '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
+      '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
+      ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
     // /** // Don't need these at the moment...
     concat: {
@@ -29,6 +32,7 @@ module.exports = function(grunt) {
         src: ['src/app/index.html'],
         dest: 'dist/<%= pkg.name %>.html',
         options: { // FIXME: Turn off banners for HTML files...
+          banner: '<!-- <%= banner %> -->\n',
         }
       },
       dist_css: {
@@ -60,6 +64,7 @@ module.exports = function(grunt) {
         boss: true,
         eqnull: true,
         browser: true,
+        node: true,
         globals: {
           jQuery: true
         }
@@ -121,6 +126,39 @@ module.exports = function(grunt) {
       }
     },
     connect: {
+      options: {
+        middleware: function(connect, options, middlewares){
+          middlewares.unshift(function updateWiki(request, response, next){
+            if ( request.url !== '/page' || request.method !== 'POST' ){
+              return next();
+            }
+
+            var name = request.body.name,
+                contents = request.body.contents || '';
+
+            if ( !name ) {
+              response.statusCode = 404;
+              response.end(JSON.stringify({ message: 'Missing parameter: name' }));
+            }
+
+            if ( !contents ) { // Do something appropriate?
+            }
+
+            var wiki = grunt.config.get('chaas.wiki'),
+                path = grunt.config.get('chaas.base');
+
+            fs.writeFileSync(path + wiki + name, contents);
+
+            response.statusCode = 200;
+
+            response.end();
+          });
+
+          middlewares.unshift(bodyParser.urlencoded());
+
+          return middlewares;
+        }, // END middleware
+      },
       examples: {
         /** defaults
         host: '0.0.0.0', // alias to localhost
@@ -160,7 +198,12 @@ module.exports = function(grunt) {
   grunt.registerTask('chaas', function(){
       var dirs = grunt.config.get('connect.dist.options.base');
 
-      dirs.push(grunt.option('path') || './');
+      var path = grunt.option('path') || './';
+
+      dirs.push(path);
+
+      grunt.config.set('chaas', grunt.file.readJSON(path + '/chaas.json'));
+      grunt.config.set('chaas.base', path);
 
       grunt.config.set('connect.dist.options.base', dirs);
 
