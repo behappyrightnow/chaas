@@ -13,7 +13,7 @@
 
         $http: any;
 
-        constructor($http, $routeParams, CONFIG, transformRequestAsFormPost){
+        constructor($http, $routeParams, CONFIG){
             CONFIG.then(()=>{
                 this.config = CONFIG;
 
