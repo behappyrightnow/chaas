@@ -1,0 +1,32 @@
+/*! chaas - v0.1.0 - 2014-09-26
+* https://github.com/behappyrightnow/chaas
+ Licensed  */
+.redCell {
+    background-color: #e8b3ae;
+}
+
+.greenCell {
+    background-color: #bbe7d3;
+}
+
+.yellowCell {
+    background-color: #f9ebad;
+}
+
+.blueCell {
+    background-color: #a4c9db;
+}
+
+.pageTitle {
+    font-size: 250%;
+}
+
+.editBox {
+    font-family: "Courier New";
+    font-size: 150%;
+}
+.logo {
+    width: 30px;
+    height: 34px;
+    margin-bottom: 20px;
+}
