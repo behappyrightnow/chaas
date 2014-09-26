@@ -12,7 +12,8 @@ module.exports = function(grunt) {
       '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
       '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
       '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-      '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
+      // FIXME: Add `author` object to `package.json`
+      //'* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
     // /** // Don't need these at the moment...
@@ -37,7 +38,7 @@ module.exports = function(grunt) {
       },
       dist_css: {
         src: ['src/css/*.css'],
-        dest: 'dist/<%= pkg.name%>.css'
+        dest: 'dist/<%= pkg.name %>.css'
       },
     },
     uglify: {
@@ -70,7 +71,7 @@ module.exports = function(grunt) {
         }
       },
       gruntfile: {
-        src: 'Gruntfile.js'
+        src: [ 'Gruntfile.js', 'package.json' ]
       },
       lib_test: {
         src: ['lib/**/*.js', 'test/**/*.js']
