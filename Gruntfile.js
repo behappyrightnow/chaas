@@ -172,7 +172,7 @@ module.exports = function(grunt) {
       dist: {
         options: {
           base: [ 'dist/', 'bower_components/' ],
-          open: 'http://localhost:8000/chaas.html'
+          open: 'http://localhost:8000/index.html'
         }
       }
     }

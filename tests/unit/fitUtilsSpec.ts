@@ -1,7 +1,7 @@
 'use strict';
 /// <reference path="../../typeScriptHeaders/jquery/jquery.d.ts"/>
 /// <reference path="../../typeScriptHeaders/jasmine/jasmine.d.ts"/>
-/// <reference path="../../src/execJS/FitUtils.ts"/>
+/// <reference path="../../src/app/scripts/FitUtils.ts"/>
 describe('FitUtils', function () {
     var fitUtils: FitUtils;
     beforeEach(function() {

@@ -1,7 +1,7 @@
 'use strict';
 /// <reference path="../../typeScriptHeaders/jquery/jquery.d.ts"/>
 /// <reference path="../../typeScriptHeaders/jasmine/jasmine.d.ts"/>
-/// <reference path="../../src/execJS/FitProcessors.ts"/>
+/// <reference path="../../src/app/scripts/FitProcessors.ts"/>
 describe('FitProcessors', function () {
     describe('Decision Processor', function() {
         var decisionProcessor: DecisionProcessor;

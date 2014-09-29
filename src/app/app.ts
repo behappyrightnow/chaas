@@ -5,7 +5,7 @@
             .when('/:page', {
                 controller: 'FitController',
                 controllerAs: 'fit',
-                templateUrl: '/app/views/page.html',
+                templateUrl: '/app/views/page.html'
             })
             .otherwise({ redirectTo: '/HomePage' })
         ;

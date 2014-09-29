@@ -1,4 +1,4 @@
-/// <reference path="FitUtils.ts"/>
+/// <reference path="scripts/FitUtils.ts"/>
 class Processor {
     fitUtils: FitUtils;
     constructor(fitUtils: FitUtils) {
