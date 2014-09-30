@@ -19,9 +19,11 @@
             allPaths = CONFIG.fixtures.concat(CONFIG.logic);
             for (var i=0;i<allPaths.length;i++) {
                 var path = allPaths[i];
-                $http.get(path).success((listing)=>{
-                    $scope.processListing(listing, path);
-                }); // END $http.get(path)
+                (function(path) {
+                    $http.get(path).success((listing)=> {
+                        $scope.processListing(listing, path);
+                    });
+                })(path)// END $http.get(path)
             }
           }); // END CONFIG.then()
         } ],
