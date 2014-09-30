@@ -15,6 +15,7 @@
           };
           CONFIG.then(function(){
             var allPaths: Array<string> = new Array();
+            debugger;
             allPaths = CONFIG.fixtures.concat(CONFIG.logic);
             for (var i=0;i<allPaths.length;i++) {
                 var path = allPaths[i];
