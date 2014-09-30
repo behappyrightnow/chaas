@@ -29,6 +29,9 @@ class PasteProcessor {
         for (var i=0;i<lines.length;i++) {
             var line = lines[i];
             var cells:Array<string> = line.split("\t");
+            for (var j=0;j<cells.length;j++) {
+                cells[j].trim();
+            }
             this.rows.push(cells);
         }
     }
