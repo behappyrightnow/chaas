@@ -38,7 +38,6 @@ gulp.task('html', ['scripts', 'partials'], function () {
       addPrefix: '../../'
     }))
     .pipe($.useref.assets())
-    .pipe($.rev())
     .pipe(jsFilter)
     .pipe($.ngAnnotate())
     .pipe(jsFilter.restore())
@@ -48,7 +47,6 @@ gulp.task('html', ['scripts', 'partials'], function () {
     .pipe(cssFilter.restore())
     .pipe($.useref.restore())
     .pipe($.useref())
-    .pipe($.revReplace())
     .pipe(gulp.dest('dist'))
     .pipe($.size());
 });

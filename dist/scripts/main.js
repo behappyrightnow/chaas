@@ -1,14 +1,13 @@
 // (function(){
 angular.module('chaas', ['ngRoute']).config([
-    '$routeProvider',
-    function ($routeProvider) {
+    '$routeProvider', function ($routeProvider) {
         $routeProvider.when('/:page', {
             controller: 'FitController',
             controllerAs: 'fit',
             templateUrl: '/app/views/page.html'
         }).otherwise({ redirectTo: '/HomePage' });
-    }
-]);
+    }]);
+// })();
 //# sourceMappingURL=app.js.map
 
 var __extends = this.__extends || function (d, b) {
@@ -568,6 +567,7 @@ var QueryProcessor = (function (_super) {
 function applyConstruct(ctor, params) {
     var obj, newobj;
 
+    // Create the object with the desired prototype
     if (typeof Object.create === "function") {
         // ECMAScript 5
         obj = Object.create(ctor.prototype);
@@ -590,6 +590,9 @@ function applyConstruct(ctor, params) {
     // Apply the constructor function
     newobj = ctor.apply(obj, params);
 
+    // If a constructor function returns an object, that
+    // becomes the return value of `new`, so we handle
+    // that here.
     if (typeof newobj === "object") {
         obj = newobj;
     }
@@ -832,9 +835,7 @@ var PasteProcessor = (function () {
 
 (function () {
     angular.module('chaas').factory('CONFIG', [
-        '$q',
-        '$http',
-        function ($q, $http) {
+        '$q', '$http', function ($q, $http) {
             var deferred = $q.defer();
 
             $http.get('/chaas.json').success(function (data) {
@@ -850,10 +851,8 @@ var PasteProcessor = (function () {
                     });
                 }
             });
-        }
-    ]);
+        }]);
 })();
-//# sourceMappingURL=CONFIG.js.map
 
 // <reference path="../app.ts">
 // (function(){
@@ -962,18 +961,14 @@ var FitController = (function () {
 })();
 
 angular.module('chaas').controller('FitController', FitController);
-//# sourceMappingURL=FitController.js.map
+// })();
 
 (function () {
     angular.module('chaas').directive('chaasFixture', function chaasFixtureDirective() {
         return {
             restrict: 'E',
             controller: [
-                'CONFIG',
-                '$http',
-                '$element',
-                '$scope',
-                function chaasFixtureLink(CONFIG, $http, $element, $scope) {
+                'CONFIG', '$http', '$element', '$scope', function chaasFixtureLink(CONFIG, $http, $element, $scope) {
                     $scope.processListing = function (listing, path) {
                         _.each(listing.split('\n'), function (basename) {
                             if (!/.js$/.test(basename))
@@ -982,7 +977,7 @@ angular.module('chaas').controller('FitController', FitController);
                                 type: 'text/javascript',
                                 src: path + basename
                             }));
-                        });
+                        }); // END _.each
                     };
                     CONFIG.then(function () {
                         var allPaths = new Array();
@@ -996,9 +991,8 @@ angular.module('chaas').controller('FitController', FitController);
                                 });
                             })(path);
                         }
-                    });
-                }
-            ]
+                    }); // END CONFIG.then()
+                }]
         };
     });
 })();
