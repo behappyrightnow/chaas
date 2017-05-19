@@ -1,5 +1,6 @@
 {
   "fixtures": ["/fixtures/"],
   "logic": [],
-  "wiki": "/stories/"
+  "wiki": "/stories/",
+  "images": ["/images/"]
 }
