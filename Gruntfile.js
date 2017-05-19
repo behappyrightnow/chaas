@@ -24,7 +24,6 @@ module.exports = function(grunt) {
       },
       dist_js: {
         src: [
-            'src/execJS/*.js',
             'src/app/**/*.js',
         ],
         dest: 'dist/<%= pkg.name %>.js'
