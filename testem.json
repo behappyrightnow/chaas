@@ -1,12 +1,13 @@
 {
-  "framework": "jasmine",
+  "framework": "jasmine2",
   "src_files": [
+    "bower_components/smart-jasmine-matcher/src/smartJasmineMatcher.js",
     "bower_components/angular/angular.js",
     "bower_components/underscore/underscore.js",
-    "src/execJS/FitUtils.js",
-    "src/execJS/FitProcessors.js",
-    "src/execJS/fitController.js",
-    "src/execJS/standaloneController.js",
+    "src/app/scripts/FitUtils.js",
+    "src/app/scripts/FitProcessors.js",
+    "src/app/scripts/fitController.js",
+    "src/app/scripts/standaloneController.js",
     "tests/unit/fitUtilsSpec.js",
     "tests/unit/fitProcessorsSpec.js"
   ]

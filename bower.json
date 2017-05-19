@@ -9,6 +9,10 @@
     "angular-route": "*"
   },
   "devDependencies": {
-    "angular-mocks": "~1.2.23"
+    "angular-mocks": "~1.2.23",
+    "smart-jasmine-matcher": "*"
+  },
+  "resolutions": {
+    "angular": "1.6.4"
   }
 }

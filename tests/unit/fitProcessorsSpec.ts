@@ -2,7 +2,12 @@
 /// <reference path="../../typeScriptHeaders/jquery/jquery.d.ts"/>
 /// <reference path="../../typeScriptHeaders/jasmine/jasmine.d.ts"/>
 /// <reference path="../../src/app/scripts/FitProcessors.ts"/>
+/// <reference path="../../bower_components/smart-jasmine-matcher/src/smartJasmineMatcher.ts"/>
+
 describe('FitProcessors', function () {
+    beforeEach(function () {
+        jasmine.addMatchers(smartorg.test.matchers.smartMatcher);
+    });
     describe('Decision Processor', function() {
         var decisionProcessor: DecisionProcessor;
         beforeEach(function() {
