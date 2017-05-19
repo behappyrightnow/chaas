@@ -52,6 +52,28 @@ describe('FitUtils', function () {
             }
         });
 
+        describe("images", function() {
+            it("parse from line", function () {
+                var listOfStrings = [
+                    "The line below contains an image",
+                    "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
+                    "This is more text"
+                ];
+                var wikiElements = fitUtils.wikiData(listOfStrings);
+                expect(wikiElements).not.toBe(undefined);
+                expect(wikiElements.length).toBe(3);
+                var expectedType = ["DEFAULT", "DEFAULT", "DEFAULT"];
+                wikiElements.forEach(function(wikiElement, index) {
+                    expect(wikiElement).not.toBe(undefined);
+                    expect(wikiElement.type).toBe(expectedType[index]);
+                });
+                var secondLine = wikiElements[1];
+                expect(secondLine.contents.length).toEqual(1);
+                expect(secondLine.contents[0].type).toEqual("IMAGE");
+            });
+        });
+
+
     });
     describe("Table Wiki Element", function() {
         var tableWikiElement: TableWikiElement;

@@ -53,6 +53,9 @@
                         <span ng-if="content.type==='LINK'">
                             <a ng-href="{{content.url()}}">{{content.text}}</a>
                         </span>
+                        <span ng-if="content.type==='IMAGE'">
+                            <img src="{{content.url}}"/>
+                        </span>
                     </span>
 
                 </span>

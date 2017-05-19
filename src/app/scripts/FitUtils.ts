@@ -28,7 +28,7 @@ class FitUtils {
         var tableFound:boolean = false;
         var tableElement:TableWikiElement;
         var answer: Array<WikiElement> = new Array();
-        _.each(lines, function(line) {
+        lines.forEach((line) => {
             if (!tableFound) {
                 if (line.charAt(0) === '|') {
                     tableFound = true;
@@ -42,7 +42,7 @@ class FitUtils {
                     tableFound = false;
                     answer.push(tableElement);
                     tableElement = null;
-                    answer.push(new DefaultElement(line));
+                    answer.push(new DefaultElement(line, $http));
                 } else {
                     tableElement.addRow(line);
                 }
@@ -124,7 +124,11 @@ module WikiState {
             contents.push(this);
         }
         createAtomicElement($http) {
-            return new TextElement(this.text);
+            if (this.text.toUpperCase().indexOf(".PNG") !== -1) {
+                return new ImageElement(this.text);
+            } else {
+                return new TextElement(this.text);
+            }
         }
     }
     export class Zero extends State {
@@ -183,7 +187,7 @@ module WikiState {
     }
 }
 interface BasicElement {
-    text:string;
+    type: string;
 }
 class TextElement implements BasicElement {
     text: string;
@@ -191,6 +195,14 @@ class TextElement implements BasicElement {
     constructor(text:string) {
         this.text = text;
         this.type = "TEXT";
+    }
+}
+class ImageElement implements BasicElement {
+    url: string;
+    type: string;
+    constructor(text:string) {
+        this.url = text;
+        this.type = "IMAGE";
     }
 }
 class LinkElement implements BasicElement{
