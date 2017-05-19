@@ -2,17 +2,14 @@
   "name": "huashan",
   "version": "0.0.0",
   "dependencies": {
-    "angular": "*",
+    "angular": "1.2.32",
     "underscore": "1.6.0",
     "bootstrap": "~3.1.1",
     "Font-Awesome": "*",
-    "angular-route": "*"
+    "angular-route": "1.2.32"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.23",
     "smart-jasmine-matcher": "*"
-  },
-  "resolutions": {
-    "angular": "1.6.4"
   }
 }
