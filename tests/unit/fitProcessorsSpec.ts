@@ -74,9 +74,9 @@ describe('FitProcessors', function () {
                 objectUnderTest = new window.testClasses["DivisionNoInputAccessors"];
                 decisionProcessor.processMethods(tableEl, objectUnderTest, "DivisionNoInputAccessors");
                 expect(tableEl.rows[1][0].status).toBe("FAILED");
-                expect(tableEl.rows[1][0].msg).toEqual("DivisionNoInputAccessors: No input method called 'numerator'. Either initialize in constructor or provide a function with this name.");
+                expect(tableEl.rows[1][0].msg).toEqual("DivisionNoInputAccessors: No method called 'numerator'. Either initialize in constructor or provide a function with this name.");
                 expect(tableEl.rows[1][1].status).toBe("FAILED");
-                expect(tableEl.rows[1][1].msg).toEqual("DivisionNoInputAccessors: No input method called 'denominator'. Either initialize in constructor or provide a function with this name.");
+                expect(tableEl.rows[1][1].msg).toEqual("DivisionNoInputAccessors: No method called 'denominator'. Either initialize in constructor or provide a function with this name.");
             });
         });
         describe("handles classes with setters and getters correctly", function() {
