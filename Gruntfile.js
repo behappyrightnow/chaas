@@ -201,6 +201,7 @@ module.exports = function(grunt) {
       var path = grunt.option('path') || './';
 
       dirs.push(path);
+      grunt.log.write("Path: "+path);
 
       grunt.config.set('chaas', grunt.file.readJSON(path + '/chaas.json'));
       grunt.config.set('chaas.base', path);
