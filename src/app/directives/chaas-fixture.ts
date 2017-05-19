@@ -18,7 +18,7 @@
             debugger;
             allPaths = CONFIG.logic.concat(CONFIG.fixtures);
             if (CONFIG.images) {
-                allPaths = CONFIG.logic.concat(CONFIG.images);
+                allPaths = allPaths.concat(CONFIG.images);
             }
             for (var i=0;i<allPaths.length;i++) {
                 var path = allPaths[i];
